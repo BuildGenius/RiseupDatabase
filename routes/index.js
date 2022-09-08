@@ -1,14 +1,15 @@
 var express = require('express');
 const Database = require('../bin/lib/sqlClass/Database');
+const Users = require('../bin/lib/sqlClass/192.168.43.84-min-project/people');
 var sql = require('../bin/lib/sqlClass/sqlSchema');
-var mysql = require('mysql');
 var config = require('../configuration.json').ITECToAX_REP;
+var config_min = require('../configuration.json')['min-project'];
 var lineLogin = require('line-login');
 var { LineClient } = require('messaging-api-line');
-const session = require('express-session');
-const { Store } = require('express-session');
 var router = express.Router();
+
 const schema = new sql(config);
+
 const login = new lineLogin({
   channel_id: '1656660083',
   channel_secret: '17729285b1719d15e3a323c5e1c0d907',
@@ -37,14 +38,22 @@ router.get('/', async function(req, res, next) {
 router.use('/Signin', login.auth());
 
 router.use('/callback', login.callback((req, res, next, token_response) => {
+  let user = Users(config_min);
+  user.storeUser({
+    "userId": token_response.id_token.sub,
+    "access_token": token_response.access_token,
+    "DisplayName": token_response.id_token.name,
+    "ProfilePicture": token_response.id_token.picture
+  })
   
+  req.session.lineID = token_response.id_token.sub;
   req.session.lineTokenID = token_response.access_token;
   req.session.lineDisplayName = token_response.id_token.name;
   req.session.lineProfile = token_response.id_token.picture;
 
   req.session.save();
   // Success callback
-  res.json(token_response);
+  res.redirect('/setupProfile');
 }, (req, res, next, error) => {
   // Failure callback
   res.status(400).json(error);
