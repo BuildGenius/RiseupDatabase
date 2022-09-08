@@ -1,0 +1,13 @@
+const Database = require('../Database');
+
+class INVENTDIM extends Database {
+    constructor(configuration) {
+        super(configuration);
+        this.table = 'INVENTDIM';
+        this.column = {
+            "CONFIGID": {"dataType": "nvarchar", "maxLength":"50"},"INVENTBATCHID": {"dataType": "nvarchar", "maxLength":"40"},"INVENTCOLORID": {"dataType": "nvarchar", "maxLength":"10"},"INVENTDIMID": {"dataType": "nvarchar", "maxLength":"40"},"INVENTGTDID_RU": {"dataType": "nvarchar", "maxLength":"30"},"INVENTLOCATIONID": {"dataType": "nvarchar", "maxLength":"10"},"INVENTOWNERID_RU": {"dataType": "nvarchar", "maxLength":"40"},"INVENTPROFILEID_RU": {"dataType": "nvarchar", "maxLength":"10"},"INVENTSERIALID": {"dataType": "nvarchar", "maxLength":"40"},"INVENTSITEID": {"dataType": "nvarchar", "maxLength":"10"},"INVENTSIZEID": {"dataType": "nvarchar", "maxLength":"10"},"INVENTSTATUSID": {"dataType": "nvarchar", "maxLength":"10"},"INVENTSTYLEID": {"dataType": "nvarchar", "maxLength":"10"},"LICENSEPLATEID": {"dataType": "nvarchar", "maxLength":"25"},"WMSLOCATIONID": {"dataType": "nvarchar", "maxLength":"10"},"WMSPALLETID": {"dataType": "nvarchar", "maxLength":"18"},"SHA1HASHHEX": {"dataType": "nvarchar", "maxLength":"40"},"INVENTDIMENSION1": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION2": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION3": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION4": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION5": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION6": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION7": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION8": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION9": {"dataType": "datetime", "maxLength":"null"},"INVENTDIMENSION9TZID": {"dataType": "int", "maxLength":"null"},"INVENTDIMENSION10": {"dataType": "numeric", "maxLength":"null"},"DATAAREAID": {"dataType": "nvarchar", "maxLength":"4"},"PARTITION": {"dataType": "bigint", "maxLength":"null"},"RECID": {"dataType": "bigint", "maxLength":"null"},"RECVERSION": {"dataType": "int", "maxLength":"null"},"MODIFIEDDATETIME": {"dataType": "datetime", "maxLength":"null"},"MODIFIEDBY": {"dataType": "nvarchar", "maxLength":"20"},"CREATEDDATETIME": {"dataType": "datetime", "maxLength":"null"},"INVENTVERSIONID": {"dataType": "nvarchar", "maxLength":"10"},"INVENTDIMENSION11": {"dataType": "nvarchar", "maxLength":"1"},"INVENTDIMENSION12": {"dataType": "nvarchar", "maxLength":"1"},"SHA3HASHHEX": {"dataType": "nvarchar", "maxLength":"96"}
+        };
+    }
+}
+
+module.exports = INVENTDIM;

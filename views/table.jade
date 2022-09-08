@@ -1,0 +1,78 @@
+extends layout
+
+-function prettyDate(datetime) {
+    -let d = new Date(datetime)
+    -return ('0' + d.getDate()).slice(-2)+'/'+('0' + (d.getMonth() + 1)).slice(-2)+'/'+d.getFullYear()
+-}
+
+block content 
+    div.container-fluid.mt-3
+        div.row
+            div.col-2
+                h2 Filter
+                hr
+                if active == 'fix Transaction Demo'
+                    form(action="/functions/getTransaction/filter", method="post") 
+                        div.row.mb-3
+                            div.col
+                                label.form-label Deposit id
+                                input#DepositID(type="text", name="depositID").form-control
+                        div.row.mb-3
+                            div.col
+                                label.form-label Deposit Branch
+                                input#DepositBranch(type="text", name="DepositBranch").form-control
+                        div.row.mb-3
+                            div.col.d-flex.justify-content-center
+                                input(type="submit", value="filter").btn.btn-block.btn-success
+                            div.col.d-flex.justify-content-center
+                                input(type="reset", value="clear").btn.btn-blick.btn-primary
+            div.col-10.bg-light.data-table
+                h2= `Table: ${title}`
+                div.table-responsive(style='max-height: 82vh;overflow: auto')
+                    table.table
+                        thead.table-info.sticky-top
+                            tr
+                                each datatype, col in column
+                                    th(class=`${datatype}`)= col
+                        tbody
+                            each row in data
+                                tr
+                                    each datatype, col in column
+                                        if datetime == 'datetime'
+                                           td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`) #{prettyDate(row[col])}
+                                        else
+                                           td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`)= row[col]
+
+block custom-script
+    script.
+        $(document).ready(function () {
+            $('input[type=reset]').click(function () {
+                window.location.reload();
+            });
+            $('form').submit(function (e) {
+                e.preventDefault();
+                let data = {"DepositID":"","DepositBranch":""};
+                data['DepositID'] = $(this).find('input#DepositID').val();
+                data['DepositBranch'] = $(this).find('input#DepositBranch').val();
+
+                postData($(this).attr('action'), data)
+                .then(async (res) => {
+                    $('table > tbody').html('');
+                    let newTable = "";
+                    for (let i = 0;i < res.length;i++) {
+                        newTable += `<tr>\r\n`;
+                        for (let ii = 0;ii < Object.keys(res[i]).length;ii++) {
+                            let values = Object.values(res[i]);
+                            newTable += `<td>${values[ii]}</td>\r\n\t`;
+                        }
+                        newTable += `</tr>\r\n`; 
+                    }
+
+                    $('table > tbody').html(newTable);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            });
+        });
+                

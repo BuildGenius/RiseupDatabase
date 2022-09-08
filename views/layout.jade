@@ -1,0 +1,113 @@
+doctype html
+html
+  head
+    title= title
+    script(src="https://code.jquery.com/jquery-3.6.0.js" ,integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" ,crossorigin="anonymous")
+    block ext-script
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" ,rel="stylesheet", integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx", crossorigin="anonymous")
+    block ext-style
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js", integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa", crossorigin="anonymous")
+    script.
+      // Example POST method implementation:
+      async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow', // manual, *follow, error
+          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+  body
+      div.container-fluid
+        nav(class="navbar navbar-expand-lg bg-light")
+          div(class="container-fluid")
+            a(class="navbar-brand", href="/") SQL Express
+            button(class="navbar-toggler", type="button", data-bs-toggle="collapse", data-bs-target="#navbarSupportedContent", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle navigation")
+              span(class="navbar-toggler-icon")
+            div(class="collapse navbar-collapse", id="navbarSupportedContent")
+              ul(class="navbar-nav me-auto mb-2 mb-lg-0")
+                li(class="nav-item")
+                  if active == "home"
+                    a#Home(class="nav-link active", aria-current="page", href="/") Home
+                  else
+                    a#Home(class="nav-link", href="/") Home
+                //- li(class="nav-item")
+                //-   a#Link(class="nav-link", href="#") Link
+                li(class="nav-item dropdown")
+                  if active == 'tempserver'||active == 'MIS_DataCenter'||active == 'SS20220901'
+                    a#LinkServer(class="nav-link dropdown-toggle active", role="button", data-bs-toggle="dropdown", aria-expanded="false") Change Connection
+                  else
+                    a#LinkServer(class="nav-link dropdown-toggle", role="button", data-bs-toggle="dropdown", aria-expanded="false") Change Connection
+                  ul(class="dropdown-menu")
+                    li
+                      if active == 'tempserver'
+                       a#TempServer(class="dropdown-item active", href="/connection/tempserver") Temp Server
+                      else
+                       a#TempServer(class="dropdown-item", href="/connection/tempserver") Temp Server
+                    li
+                      if active == 'MIS_DataCenter'
+                       a#TempServer(class="dropdown-item active", href="/connection/MIS_DataCenter") MIS Data Center
+                      else
+                       a#TempServer(class="dropdown-item", href="/connection/MIS_DataCenter") MIS Data Center
+                    li
+                      if active == 'SS20220901'
+                       a#TempServer(class="dropdown-item active", href="/connection/SS20220901") SS20220901
+                      else
+                       a#TempServer(class="dropdown-item", href="/connection/SS20220901") SS20220901
+                    li
+                      if active == 'D365_snapshot'
+                       a#TempServer(class="dropdown-item active", href="/connection/D365_snapshot") D365 snapshot
+                      else
+                       a#TempServer(class="dropdown-item", href="/connection/D365_snapshot") D365 snapshot
+                    //- li
+                    //-   a(class="dropdown-item", href="/connection/devserver") dev Server(10.102.14.48,18963)
+                    //- li
+                    //-   a(class="dropdown-item", href="/connection/devserver") dev Server(10.102.14.48,18963)(เน็ตนอก com7)
+                    //- li
+                    //-   a(class="dropdown-item", href="/connection/devserver") clone ITEC(10.100.101.48)
+                    //- li 
+                    //-   a(class="dropdown-item", href="/connection/PoewrBIserver") Power BI server(10.102.6.100,18963)
+                li(class="nav-item dropdown")
+                  a#LinkServer(class="nav-link dropdown-toggle", role="button", data-bs-toggle="dropdown", aria-expanded="false") Functions
+                  ul(class="dropdown-menu")
+                    li
+                      if active == 'getNewGroupCat'
+                        a#TempServer(class="dropdown-item active", href="/functions/getNewGroupCat") Get new Group Category
+                      else
+                        a#TempServer(class="dropdown-item", href="/functions/getNewGroupCat") Get new Group Category
+                      if active == 'getNewCat'
+                        a#TempServer(class="dropdown-item active", href="/functions/getNewCat") Get new Category
+                      else
+                       a#TempServer(class="dropdown-item", href="/functions/getNewCat") Get new Category
+                      if active == 'getNewSubcat'
+                        a#TempServer(class="dropdown-item active", href="/functions/getNewSubcat") Get new Subcat
+                      else
+                       a#TempServer(class="dropdown-item", href="/functions/getNewSubcat") Get new Subcat
+                      if active == "fix Transaction Demo"
+                       a#TempServer(class="dropdown-item active", href="/functions/getTransaction") fix Transaction Demo
+                      else 
+                        a#TempServer(class="dropdown-item", href="/functions/getTransaction") fix Transaction Demo
+                      if active == "changeStatusTransfer"
+                       a#TempServer(class="dropdown-item active", href="/functions/changeStatusTransfer") Change Status Transfer
+                      else 
+                        a#TempServer(class="dropdown-item", href="/functions/changeStatusTransfer") Change Status Transfer
+                    //- li
+                    //-   hr(class="dropdown-divider")
+                    //- li
+                    //-   a(class="dropdown-item", href="#") Something else here
+                //- li(class="nav-item")
+                //-   a(class="nav-link disabled") Disabled
+              form(class="d-flex", role="search")
+                input(class="form-control me-2", type="search", placeholder="Search", aria-label="Search")
+                button(class="btn btn-outline-dark", type="submit") Search
+      block content
+      block custom-script

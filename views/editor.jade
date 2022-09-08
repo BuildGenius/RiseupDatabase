@@ -1,0 +1,39 @@
+extends layout
+
+block content 
+    div.container-fluid
+        div.row.mt-2
+            div.col
+                div.row.mb-2
+                    div.col
+                        h2.form-label SQL Editor
+                    div.col.d-flex.justify-content-end
+                        button.btn.btn-success debug
+                textarea#editor(name="editor", rows="15").form-control= defaultCommand
+        div.row
+            div.col
+                ul.nav.justify-content-center
+                    li.nav-item
+                        a.nav-link(aria-current="page") logs
+                    li.nav-item
+                        a.nav-link.disabled(href="#" tabindex="-1" aria-disabled="true") result
+        div.row.mb-3
+            div.col
+                textarea#logs(name="logs", rows="10", readonly=true).form-control.bg-light
+
+block custom-script
+    script.
+        $(document).ready(function () {
+            $('body').keydown(function (e) {
+                let keycode = (e.keyCode ? e.keyCode : e.which);
+                if (keycode == 16) {
+                    $('body').keypress(function (e) {
+                        let keycode = (e.keyCode ? e.keyCode : e.which);
+                        if (keycode == 13) {
+                            console.log('You hold \'shift\' and press \'Enter\'');
+                        }
+                    })
+                }
+            })
+            
+        })

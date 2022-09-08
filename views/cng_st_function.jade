@@ -1,0 +1,138 @@
+extends layout 
+
+block content 
+    div.container.shadow.rounded.p-3.mt-3
+        div
+            h2 Change Status Transfer
+        hr
+        form#st_transfer(action="./changeStatusTransfer/exec", method="post") 
+            div.row
+                //- <div class="alert alert-success d-flex align-items-center" role="alert">
+                //-     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                //-     <div>
+                //-         ...
+                //-     </div>
+                //- </div>
+                div.alert.alert-success.d-flex.align-items-center.d-none(role="alert")
+                    svg.bi.flex-shrink-0.me-2(width="24",height="24",role="img",aria-lebel="Success:")
+                        use(xlink:href="#check-circle-fill")
+                    div#success-response-text
+                div.alert.alert-danger.d-flex.align-items-center.d-none(role="alert")
+                    svg.bi.flex-shrink-0.me-2(width="24",height="24",role="img",aria-lebel="Danger:")
+                        use(xlink:href="#exclamation-triangle-fill")
+                    div#danger-response-text
+            div.row.mb-3
+                div.col
+                    label.form-label Target Date
+                    input#CreateDate(type="date", name="CreateDate", value='2022-09-01').form-control
+                div.col.form-check.form-switch.d-flex.align-items-end.flex-warp
+                    div.p-2
+                        input#ID4Only(type="checkbox", name="ID4Only").form-check-input
+                        label.form-check-label(for="ID4Only") Inventory Out from ID 4 Only
+            div.row
+                div.col.d-flex.justify-content-end
+                    input(type="submit", value="Execute").btn.btn-primary
+            //- hr
+            //- div.row
+            //-     h2= `Table: ${title}`
+            //-     div.table-responsive(style='max-height: 82vh;overflow: auto')
+            //-         table.table
+            //-             thead.table-info.sticky-top
+            //-                 tr
+            //-                     each datatype, col in column
+            //-                         th(class=`${datatype}`)= col
+            //-             tbody
+            //-                 each row in data
+            //-                     tr
+            //-                         each datatype, col in column
+            //-                             if datetime == 'datetime'
+            //-                                td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`) #{prettyDate(row[col])}
+            //-                             else
+            //-                                td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`)= row[col]
+          script.
+            // Example POST method implementation:
+            async function postData(url = '', data = {}) {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+            });
+            return response.json(); // parses JSON response into native JavaScript objects
+            }
+
+            async function getAuth() {
+            let auth = await postData('/users/getAuth');
+            
+            if (!auth.status) {
+                window.location.replace(auth.sendto);
+            }
+            }
+
+            function tricker_filter_panel () {
+            setTimeout($(document).ready(function () {
+                $('table>thead>tr>th').click(function () {
+                var typeOfColumn = $(this).data('type');
+                postData('./getFilter', { 'type': typeOfColumn });
+                });
+            }), 3000)
+            }
+
+            $(document).ready(async function () {
+            //- await getAuth();
+            $('input[type=text]#find-button').keyup(function () {
+                let btnes = $('button.btn-block');
+
+                for (let i = 0; i < btnes.length;i++) {
+                    let name = $(btnes[i]).attr('data-table').toUpperCase();
+                    let regex = new RegExp($(this).val().toUpperCase(), 'gm');
+
+                    if (regex.exec(name) == null) {
+                    $(btnes[i]).addClass('d-none');
+                    } else {
+                    $(btnes[i]).removeClass('d-none');
+                    }
+                }
+            });
+            $('button[data-action=link]').click(async function () {
+                let selector = $(this).data('table');
+                let protocal = window.location.protocol;
+                let uri = window.location.hostname;
+                if (protocal == 'http:') {
+                uri += ':3000'
+                }
+                let path = window.location.pathname;
+
+                if (path == '/') {
+                window.location.replace(`${protocal}//${uri}/connection/tempserver/${selector}`);
+                } else {
+                window.location.replace(`${protocal}//${uri}${path}/${selector}`);
+                }
+            });
+            $('form#st_transfer').submit(async function (e) {
+                e.preventDefault();
+                
+                let data = {};
+                data['CreateDate'] = $(this).find('input[type=date]').val();
+                data['ID4Only'] = $(this).find('input[type=checkbox]').prop('checked') ? 'Yes':'No';
+
+                let res = await postData($(this).attr('action'), data);
+
+                if (res.status == 'Completed') {
+                    $('div#success-response-text').text(`Updated! Affect ${res.Affect} rows`);
+                    $('div.alert.alert-success').removeClass('d-none');
+
+                    setInterval(function () {
+                        $('div.alert.alert-success').addClass('d-none');
+                    }, 10000);
+                }
+            });
+            });

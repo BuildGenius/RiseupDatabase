@@ -1,0 +1,97 @@
+extends layout
+
+block ext-script
+
+block ext-style 
+    link(type="text/css", rel="stylesheet", href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css")
+
+block content 
+    div.container
+        div.row
+            div.col.mt-3
+                div.row
+                    div.col
+                        h1 SIGN IN
+                        hr
+                        form#signin(action="/user/getAuth", method="POST")
+                            div.row
+                                div.col.mb-3
+                                    label.form-label email:
+                                    input#signin-email(type="text", name="signin-email").form-control
+                            div.row
+                                div.col.mb-3
+                                    label.form-label Password: 
+                                    input#signin-password(type="password", name="signin-password").form-control
+                            div.row
+                                div.col.form-check
+                                    input#rememberme(type="checkbox", name="rememberme", checked="true").form-check-input
+                                    label.form-check-label remember me
+                                div.col.d-flex.justify-content-end
+                                    input(type="submit", value="Sign in").btn.btn-primary
+                    div.col.bg-light.rounded
+                        h1 SIGN UP
+                        hr
+                        form#signup(action="/user/store", method="POST")
+                            div.row.mb-3
+                                div.col
+                                    label.form-label email:
+                                    input#signup-email(type="email", name="signup-email").form-control
+                                div.col
+                                    label.form-label password:
+                                    input#signup-password(type="password", name="password").form-control
+                                div.col
+                                    label.form-label confirm-password: 
+                                    input#con-password(type="password", name="con-password").form-control
+                            div.row.mb-3
+                                div.col
+                                    label.form-label First Name:
+                                    input#first-name(type="text", name="first-name").form-control
+                                div.col
+                                    label.form-label Last Name:
+                                    input#last-name(type="text", name="last-name").form-control
+                            div.row.mb-3
+                                div.col
+                                    label.form-label Display Name:
+                                    input#display-name(type="text", name="display-name").form-control
+                            div.row.mb-3
+                                div.col.d-flex.justify-content-end
+                                    input(type="submit", value="Sign up").btn.btn-primary
+
+block custom-script
+    script.
+        $(document).ready(function () {
+            $('form#signin').submit(async function (e) {
+                e.preventDefault();
+
+                let data = {};
+                data.username = $(this).find('input#signin-email').val();
+                data.password = $(this).find('input#signin-password').val();
+                data.rememberme = $(this).find('input[type=checkbox]#rememberme').val();
+                
+                let response = await postData('/users/signin', data);
+                if (auth.status) {
+                    window.location.replace(auth.redirectto);
+                }
+            });
+
+            $('form#signup').submit(async function (e) {
+                e.preventDefault();
+                let data = {};
+                data.username = $(this).find('input#signup-email').val();
+
+                if ($(this).find('input#signup-password').val() == $(this).find('input#con-password').val()) {
+                    data.password = $(this).find('input#signup-password').val();
+                }
+
+                data.firstname = $(this).find('input#first-name').val();
+                data.lastname = $(this).find('input#last-name').val();
+                data.displayname = $(this).find('input#display-name').val();
+
+                let response = await postData('/users/store', data);
+                let auth = await postData('/users/getAuth', response);
+                console.log(auth);
+                if (auth.status) {
+                    window.location.replace(auth.redirectto);
+                }
+            });
+        });

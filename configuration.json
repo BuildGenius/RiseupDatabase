@@ -1,0 +1,58 @@
+{
+    "ITECToAX_REP": {
+        "server": "43.254.133.155",
+        "user": "itec2axrep",
+        "password":"P3rx@2ceiT",
+        "database":"ITECToAX_REP",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
+        }
+    },
+    "MISExpress" : {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "misexpress"
+    },
+    "server48": {
+        "server": "10.100.101.48",
+        "user": "MISDEV",
+        "password":"0608H",
+        "database":"SSSearch",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
+        }
+    },
+    "server48SS20220901": {
+        "server": "10.100.101.48",
+        "user": "MISDEV",
+        "password":"0608H",
+        "database":"SS20220901",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
+        }
+    },
+    "D365_snapshot": {
+        "server" : "192.168.43.84",
+        "user": "min-erp",
+        "password": "mn.123456",
+        "database": "D365",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
+        }
+    },
+    "min-project" : {
+        "server" : "192.168.43.84",
+        "user": "min-erp",
+        "password": "mn.123456",
+        "database": "min-project",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
+        }
+    }
+}

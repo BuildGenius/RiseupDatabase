@@ -1,0 +1,83 @@
+extends layout
+
+block content 
+  div.container-fluid
+    div.row.mt-3
+      div.col-3
+        div.d-grid.gap-2
+          label.form-label Search table
+          input#find-button(type="text", name="find-button", placeholder="Table name").form-control
+          hr
+          each table in Alltable 
+            button.btn.btn-light.btn-block(data-table=`${table.TABLE_NAME}`, data-action='link')=table.TABLE_NAME
+      div.col-9.bg-light.dataTable
+        div.filter-panel
+  script.
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+      // Default options are marked with *
+      const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+      return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    async function getAuth() {
+      let auth = await postData('/users/getAuth');
+      
+      if (!auth.status) {
+        window.location.replace(auth.sendto);
+      }
+    }
+
+    function tricker_filter_panel () {
+      setTimeout($(document).ready(function () {
+        $('table>thead>tr>th').click(function () {
+          var typeOfColumn = $(this).data('type');
+          postData('./getFilter', { 'type': typeOfColumn });
+        });
+      }), 3000)
+    }
+
+    $(document).ready(async function () {
+      //- await getAuth();
+      $('input[type=text]#find-button').keyup(function () {
+        let btnes = $('button.btn-block');
+
+          for (let i = 0; i < btnes.length;i++) {
+            let name = $(btnes[i]).attr('data-table').toUpperCase();
+            let regex = new RegExp($(this).val().toUpperCase(), 'gm');
+
+            if (regex.exec(name) == null) {
+              $(btnes[i]).addClass('d-none');
+            } else {
+              $(btnes[i]).removeClass('d-none');
+            }
+          }
+      });
+      $('button[data-action=link]').click(async function () {
+        let selector = $(this).data('table');
+        let protocal = window.location.protocol;
+        let uri = window.location.hostname;
+        if (protocal == 'http:') {
+          uri += ':3000'
+        }
+        let path = window.location.pathname;
+
+        if (path == '/') {
+          window.location.replace(`${protocal}//${uri}/connection/tempserver/${selector}`);
+        } else {
+          window.location.replace(`${protocal}//${uri}${path}/${selector}`);
+        }
+      });
+    });

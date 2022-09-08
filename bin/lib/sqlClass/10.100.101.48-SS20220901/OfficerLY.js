@@ -1,0 +1,13 @@
+const Database = require('../Database');
+
+class OfficerLY extends Database {
+    constructor(configuration) {
+        super(configuration);
+        this.table = 'OfficerLY';
+        this.column = {
+            "CompanyID": {"dataType": "int", "maxLength":"null"},"OfficerID": {"dataType": "int", "maxLength":"null"},"YearOfTax": {"dataType": "int", "maxLength":"null"},"DocumentDate": {"dataType": "datetime", "maxLength":"null"},"WorkBefore": {"dataType": "int", "maxLength":"null"},"OtherIncome": {"dataType": "int", "maxLength":"null"},"SpSingle": {"dataType": "int", "maxLength":"null"},"SpWidow": {"dataType": "int", "maxLength":"null"},"SpIncome": {"dataType": "int", "maxLength":"null"},"SpNoIncome": {"dataType": "int", "maxLength":"null"},"SpRegis": {"dataType": "int", "maxLength":"null"},"SpRegisYear": {"dataType": "int", "maxLength":"null"},"SpYearStatus": {"dataType": "int", "maxLength":"null"},"ChildAmt": {"dataType": "int", "maxLength":"null"},"ChildLY": {"dataType": "int", "maxLength":"null"},"ChildLYAmt1": {"dataType": "int", "maxLength":"null"},"ChildLYAmt2": {"dataType": "int", "maxLength":"null"},"OwnFather": {"dataType": "int", "maxLength":"null"},"OwnMather": {"dataType": "int", "maxLength":"null"},"OwnParent": {"dataType": "int", "maxLength":"null"},"OwnParentLYAmt": {"dataType": "money", "maxLength":"null"},"SpFather": {"dataType": "int", "maxLength":"null"},"SpMather": {"dataType": "int", "maxLength":"null"},"SpParent": {"dataType": "int", "maxLength":"null"},"SpParentLYAmt": {"dataType": "money", "maxLength":"null"},"InsuranceAmt": {"dataType": "money", "maxLength":"null"},"CapFundAmt1": {"dataType": "money", "maxLength":"null"},"CapFundAmt2": {"dataType": "money", "maxLength":"null"},"CapFundName2": {"dataType": "varchar", "maxLength":"50"},"CapFundAmt3": {"dataType": "money", "maxLength":"null"},"CapFundName3": {"dataType": "varchar", "maxLength":"50"},"LoanAmt": {"dataType": "money", "maxLength":"null"},"SSFundAmt": {"dataType": "money", "maxLength":"null"},"TotalLY": {"dataType": "money", "maxLength":"null"},"Status": {"dataType": "int", "maxLength":"null"},"CrOff": {"dataType": "int", "maxLength":"null"},"CrTime": {"dataType": "datetime", "maxLength":"null"},"UOff": {"dataType": "int", "maxLength":"null"},"UTime": {"dataType": "datetime", "maxLength":"null"},"RepTime": {"dataType": "datetime", "maxLength":"null"},"Counter": {"dataType": "int", "maxLength":"null"}
+        };
+    }
+}
+
+module.exports = OfficerLY;
