@@ -74,7 +74,6 @@ class sqlSchema extends db {
             tables = await this.select("TABLES").get();
         }
         
-        
         for (let i = 0;i < tables.recordset.length;i++) {
             await this.chk_existing_file(tables.recordset[i].TABLE_NAME);
         }

@@ -3,10 +3,20 @@ const Database = require('../bin/lib/sqlClass/Database');
 var sql = require('../bin/lib/sqlClass/sqlSchema');
 var mysql = require('mysql');
 var config = require('../configuration.json').ITECToAX_REP;
+var lineLogin = require('line-login');
 var { LineClient } = require('messaging-api-line');
+const session = require('express-session');
+const { Store } = require('express-session');
 var router = express.Router();
 const schema = new sql(config);
-const crypto = require('crypto');
+const login = new lineLogin({
+  channel_id: '1656660083',
+  channel_secret: '17729285b1719d15e3a323c5e1c0d907',
+  callback_url: 'https://9a5f-110-170-68-130.ap.ngrok.io/callback',
+  scope: "openid profile",
+  prompt: "consent",
+  bot_prompt: "normal"
+});
 
 //line config
 const client = new LineClient({
@@ -24,9 +34,21 @@ router.get('/', async function(req, res, next) {
   res.render('index', { title: 'SQL Express', Alltable: tables, active: 'home' });
 });
 
-router.get('/Signin', function (req, res) {
-  res.render('signin', {title: 'Sign In'});
-});
+router.use('/Signin', login.auth());
+
+router.use('/callback', login.callback((req, res, next, token_response) => {
+  
+  req.session.lineTokenID = token_response.access_token;
+  req.session.lineDisplayName = token_response.id_token.name;
+  req.session.lineProfile = token_response.id_token.picture;
+
+  req.session.save();
+  // Success callback
+  res.json(token_response);
+}, (req, res, next, error) => {
+  // Failure callback
+  res.status(400).json(error);
+}))
 
 router.post('/getTable', async function(req, res){
   let db = new Database(config);

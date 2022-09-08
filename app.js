@@ -1,10 +1,11 @@
 var createError = require('http-errors');
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cron = require('node-cron');
-var session = require('cookie-session');
+// var session = require('cookie-session');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var ConnectionRouter = require('./routes/connection');
@@ -13,6 +14,11 @@ var SSRouter = require('./routes/SS20220901');
 var D365_snapshot = require('./routes/D365_snapshot');
 var FunctionRouter = require('./routes/functions');
 var apiRouter = require('./routes/api');
+var session_options = {
+  secret: '17729285b1719d15e3a323c5e1c0d907',
+  resave: false,
+  saveUninitialized: false
+}
 
 var app = express();
 
@@ -26,24 +32,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('trust proxy', 1)
-app.use(session({
-  name: 'Session',
-  secret: genCode(13),
-  signed: true,
-  keys: ["new session"],
-  maxAge: 1000*60*60*24*7
-}));
+app.use(session(session_options));
 
-function genCode(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-    result += characters.charAt(Math.floor(Math.random() * 
-charactersLength));
- }
- return result;
-}
+// function genCode(length) {
+//   var result           = '';
+//   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//   var charactersLength = characters.length;
+//   for ( var i = 0; i < length; i++ ) {
+//     result += characters.charAt(Math.floor(Math.random() * 
+// charactersLength));
+//  }
+//  return result;
+// }
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

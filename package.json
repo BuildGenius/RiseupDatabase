@@ -19,6 +19,7 @@
     "firebase": "^9.9.3",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "line-login": "^1.0.14",
     "md5": "^2.3.0",
     "messaging-api-line": "^1.1.0",
     "morgan": "~1.9.1",

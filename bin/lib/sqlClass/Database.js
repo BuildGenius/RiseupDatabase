@@ -70,6 +70,21 @@ class Database {
         this.conn = await sql.connect(this.config);
         return this;
     }
+    async onCreate() {
+        let columns = function (columns) {
+            let column = [];
+            for (let i = 0;i < Object.keys(columns).length;i++) {
+                console.log(Object.keys(columns)[i], Object.values(column)[i]);
+                // column.push(`${Object.keys(columns)[i].toUpperCase()} ${Object.values(column)[i].dataType.toUpperCase()}${Object.values(column)[i].maxLength != undefined ? `(${Object.values(column)[i].maxLength})`:''}`);
+            }
+
+            console.log(column);
+        }
+
+        console.log(columns(this.column));
+        // this.createTable = `CREATE TABLE ${this.table} (
+        // )`
+    }
     async toString() {
         return await this.get(false);
     }
