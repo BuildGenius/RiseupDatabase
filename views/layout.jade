@@ -27,6 +27,12 @@ html
         });
         return response.json(); // parses JSON response into native JavaScript objects
       }
+      async function signOut() {
+        let res = await postData('/signout', {});
+        if (res.status) {
+          window.location.reload();
+        }
+      }
   body
       div.container-fluid
         nav(class="navbar navbar-expand-lg bg-light")
@@ -107,8 +113,9 @@ html
                     //-   a(class="dropdown-item", href="#") Something else here
                 //- li(class="nav-item")
                 //-   a(class="nav-link disabled") Disabled
-              form(class="d-flex", role="search")
-                input(class="form-control me-2", type="search", placeholder="Search", aria-label="Search")
-                button(class="btn btn-outline-dark", type="submit") Search
+              div.d-flex.justify-content-end
+                img(src=profile, style='width:45px;height:auto').img-thumbnail.rounded.rounded-circle 
+                a.navbar-brand= username
+                button#signout.btn.btn-danger(onclick="signOut()") Sign out
       block content
       block custom-script

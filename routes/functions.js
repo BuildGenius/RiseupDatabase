@@ -12,6 +12,9 @@ router.get('/getTransaction', async function (req, res) {
 });
 
 router.get('/changeStatusTransfer', async function (req, res) {
+    // req.sessionStore.all((err, sess) => {
+    //     console.log(sess)
+    // })
     let d = new Date;
     let currentDate = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() - 1}`;
     let dept = new rvdeposit(config);
