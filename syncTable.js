@@ -3,5 +3,5 @@ const config = require('./configuration.json')['min-project'];
 
 (async () => {
     let schema = new syncSchema(config);
-    await schema.syncSchema('term');
+    await schema.syncSchema('USERS');
 })();

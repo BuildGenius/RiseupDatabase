@@ -1,6 +1,6 @@
 var express = require('express');
 const Database = require('../bin/lib/sqlClass/Database');
-const Users = require('../bin/lib/sqlClass/192.168.43.84-min-project/people');
+const User = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERS');
 var sql = require('../bin/lib/sqlClass/sqlSchema');
 var config = require('../configuration.json').ITECToAX_REP;
 var config_min = require('../configuration.json')['min-project'];
@@ -14,7 +14,7 @@ const schema = new sql(config);
 const login = new lineLogin({
   channel_id: '1656660083',
   channel_secret: '17729285b1719d15e3a323c5e1c0d907',
-  callback_url: 'https://58dd-49-228-168-14.ap.ngrok.io/callback',
+  callback_url: 'https://d7bd-183-88-63-114.ap.ngrok.io/callback',
   scope: "openid profile",
   prompt: "consent",
   bot_prompt: "normal"
@@ -28,20 +28,21 @@ const client = new LineClient({
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  // req.sessionStore.all(async (err, sess) => {
-  //   if (err) throw err;
+  req.sessionStore.all(async (err, sess) => {
+    if (err) throw err;
     
-  //   if (Object.values(sess).length > 0) {
-  //     let expriresTime = await axios.get('https://api.line.me/oauth2/v2.1/verify?access_token=' + Object.values(sess)[0].lineTokenID)
-  //     .catch(err => {if (err) throw err})
-  //     req.session.cookie.expires = new Date(Date.now() + expriresTime.data.expires_in);
-  //     req.session.cookie.maxAge = expriresTime.data.expires_in;
+    if (Object.values(sess).length > 0) {
+      let expriresTime = await axios.get('https://api.line.me/oauth2/v2.1/verify?access_token=' + Object.values(sess)[0].lineTokenID)
+      .catch(err => {if (err) throw err})
+      req.session.cookie.expires = new Date(Date.now() + expriresTime.data.expires_in);
+      req.session.cookie.maxAge = expriresTime.data.expires_in;
 
-  //     req.session.save();
-  //   } else {
-  //     res.redirect('/Signin');
-  //   }
-  // })
+      req.session.save();
+    } 
+    // else {
+    //   res.redirect('/Signin');
+    // }
+  })
   let tables = [];
   await schema.syncSchema();
   await schema.select("TABLES").get().then(result => {
@@ -69,12 +70,16 @@ router.use('/callback', login.callback(async (req, res, next, token_response) =>
 
   req.session.save();
   // Success callback
-  res.redirect('/');
+  res.redirect('/setDefultProfile');
   // res.json(access_token_valid);
 }, (req, res, next, error) => {
   // Failure callback
   res.status(400).json(error);
 }))
+
+router.get('', async function () {
+
+});
 
 router.use('/signout', (req, res) => {
   req.session.destroy();

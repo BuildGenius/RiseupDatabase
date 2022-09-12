@@ -33,6 +33,9 @@ html
           window.location.reload();
         }
       }
+      function signIn() {
+        window.location.replace('/Signin');
+      }
   body
       div.container-fluid
         nav(class="navbar navbar-expand-lg bg-light")
@@ -114,8 +117,11 @@ html
                 //- li(class="nav-item")
                 //-   a(class="nav-link disabled") Disabled
               div.d-flex.justify-content-end
-                img(src=profile, style='width:45px;height:auto').img-thumbnail.rounded.rounded-circle 
-                a.navbar-brand= username
-                button#signout.btn.btn-danger(onclick="signOut()") Sign out
+                if session.lineDisplayName != null
+                  img(src=session.lineProfile, style='width:45px;height:auto').img-thumbnail.rounded.rounded-circle 
+                  a.navbar-brand= session.lineDisplayName
+                  button#signout.btn.btn-danger(onclick="signOut()") Sign out
+                else
+                  button#signin.btn.btn-success(onclick="signIn()") Sign in
       block content
       block custom-script

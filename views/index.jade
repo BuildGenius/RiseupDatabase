@@ -10,8 +10,32 @@ block content
           hr
           each table in Alltable 
             button.btn.btn-light.btn-block(data-table=`${table.TABLE_NAME}`, data-action='link')=table.TABLE_NAME
-      div.col-9.bg-light.dataTable
-        div.filter-panel
+      div.col-9.dataTable
+        div.admin-tools.registed-user
+          h3 new user request
+          table.table
+            thead.table-warning
+              tr
+                th #
+                th Line id
+                th Employee id
+                th Full name
+                th Department 
+                th Role 
+                th Team
+                th Register time
+                th Approve
+            tbody.table-striped.table-hover
+              tr
+                td
+                td 
+                td 
+                td 
+                td 
+                td 
+                td 
+                td 
+                td 
   script.
     // Example POST method implementation:
     async function postData(url = '', data = {}) {
@@ -50,7 +74,9 @@ block content
     }
 
     $(document).ready(async function () {
-      //- await getAuth();
+      $('div.registed-user').ready(function () {
+        
+      });
       $('input[type=text]#find-button').keyup(function () {
         let btnes = $('button.btn-block');
 

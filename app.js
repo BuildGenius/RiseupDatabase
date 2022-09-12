@@ -33,6 +33,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('trust proxy', 1)
 app.use(session(session_options));
+app.use((req, res, next) => {
+  res.locals.session = req.session
+  next();
+});
 
 // function genCode(length) {
 //   var result           = '';
