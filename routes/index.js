@@ -61,6 +61,18 @@ router.get('/', async function(req, res, next) {
 router.use('/Signin', login.auth());
 
 router.use('/callback', login.callback(async (req, res, next, token_response) => {
+  /**
+   * role number
+   * 1 = 'guest' DEFAULT user register with login page
+   * 2 = 'officer'
+   * 3 = 'team leader'
+   * 4 = 'manager/asst. manager'
+   * 
+   * 99 = 'admin'
+   */
+
+  let user = new User(config);
+  user.insert_user
   // let access_token_valid = await axios.get('https://api.line.me/oauth2/v2.1/verify?' + token_response.access_token).catch(err => {if (err) throw err});
   // console.log(access_token_valid);
   req.session.lineID = token_response.id_token.sub;
