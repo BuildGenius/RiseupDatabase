@@ -28,20 +28,20 @@ const client = new LineClient({
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  req.sessionStore.all(async (err, sess) => {
-    if (err) throw err;
+  // req.sessionStore.all(async (err, sess) => {
+  //   if (err) throw err;
     
-    if (Object.values(sess).length > 0) {
-      let expriresTime = await axios.get('https://api.line.me/oauth2/v2.1/verify?access_token=' + Object.values(sess)[0].lineTokenID)
-      .catch(err => {if (err) throw err})
-      req.session.cookie.expires = new Date(Date.now() + expriresTime.data.expires_in);
-      req.session.cookie.maxAge = expriresTime.data.expires_in;
+  //   if (Object.values(sess).length > 0) {
+  //     let expriresTime = await axios.get('https://api.line.me/oauth2/v2.1/verify?access_token=' + Object.values(sess)[0].lineTokenID)
+  //     .catch(err => {if (err) throw err})
+  //     req.session.cookie.expires = new Date(Date.now() + expriresTime.data.expires_in);
+  //     req.session.cookie.maxAge = expriresTime.data.expires_in;
 
-      req.session.save();
-    } else {
-      res.redirect('/Signin');
-    }
-  })
+  //     req.session.save();
+  //   } else {
+  //     res.redirect('/Signin');
+  //   }
+  // })
   let tables = [];
   await schema.syncSchema();
   await schema.select("TABLES").get().then(result => {
