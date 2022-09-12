@@ -19,28 +19,10 @@ class Line {
             let regex = new RegExp(Object.keys(this.LineFunction)[i], 'gm');
 
             if (regex.exec(this.messageText.toUpperCase()) !== null) {
-                await this[Object.values(this.LineFunction)[i]]();
+                this.replyMessage = await Object.values(this.LineFunction)[i](this.messageText);
                 this.sendMessage();
             }
         }
-    }
-    async fixedReceiptDeposit () {
-        let message = this.messageText.toUpperCase().replace(/DP/gm, '');
-        let id = message.split('-')[0];
-        let branch = message.split('-')[1];
-
-        var ReceiptDeposit = require('../sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
-        var config = require('../../../configuration.json').ITECToAX_REP;
-        var rv = new ReceiptDeposit(config);
-
-        var result = await rv.select('TransactionID').where('DepositID', id).where('DepositBranch', branch).get();
-
-        this.replyMessage = "";
-        for (let i = 0;i < result.length;i++) {
-            this.replyMessage += `TransactionID: ${Object.values(result[i])[0]}\r\n`;
-        }
-
-        return this;
     }
     sendMessage() {
         line.replyText(this.replyToken, this.replyMessage);

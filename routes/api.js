@@ -5,7 +5,28 @@ var authRouter = require('./auth');
 var line = require('../bin/lib/linesFunction/Line');
 // const { Line } = require("messaging-api-line");
 var lineClient = new line({
-    "DP": "fixedReceiptDeposit"
+    "DP": async (messageText) => {
+        let message = messageText.toUpperCase().replace(/DP/gm, '');
+        let id = message.split('-')[0];
+        let branch = message.split('-')[1];
+
+        var ReceiptDeposit = require('../sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
+        var config = require('../../../configuration.json').ITECToAX_REP;
+        var rv = new ReceiptDeposit(config);
+
+        var result = await rv.select('TransactionID').where('DepositID', id).where('DepositBranch', branch).get();
+
+        let replyMessage = "";
+        for (let i = 0;i < result.length;i++) {
+            replyMessage += `TransactionID: ${Object.values(result[i])[0]}\r\n`;
+        }
+
+        return replyMessage;
+    },
+    "TIMESHEET": "ADDNEWTIMESHEET",
+    "NOTE": "ADDNEWNOTE",
+    "ASSIGN": "ADDNEWJOB",
+    "ACHIEVEMENT": "GETWEEKLYARCHIVEMENT"
 });
 
 router.use('/auth', authRouter);
@@ -37,7 +58,7 @@ router.post('/lineCall', async (req, res) => {
                         lineClient.userId = userId;
                         lineClient.replyToken = replyToken;
 
-                        lineClient.do();
+                        // lineClient.do();
                     } 
                 break;
                 case 'follow' :
