@@ -119,7 +119,7 @@ html
               div.d-flex.justify-content-end
                 if session.lineDisplayName != null
                   img(src=session.lineProfile, style='width:45px;height:auto').img-thumbnail.rounded.rounded-circle 
-                  a.navbar-brand= session.lineDisplayName
+                  a.navbar-brand= `${session.userDisplayName !== session.lineDisplayName ? session.userDisplayName:session.lineDisplayName}`
                   button#signout.btn.btn-danger(onclick="signOut()") Sign out
                 else
                   button#signin.btn.btn-success(onclick="signIn()") Sign in

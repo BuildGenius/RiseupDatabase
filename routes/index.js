@@ -82,10 +82,18 @@ router.use('/callback', login.callback(async (req, res, next, token_response) =>
   if (userid.status) {
     res.redirect(`/setDefualtProfile?ID=${userid.userid}`);
   } else {
-    let umt = USERMETA(config_min);
-    let data = umt.get(userid.userid);
-    console.log(data);
-    
+    let umt = new USERMETA(config_min);
+    let data = await umt.getUserMeta(userid.userid);
+
+    req.session.userDisplayName = data.displayName;
+    req.session.userPosition = data.position;
+    req.session.userEmail = data.email;
+    req.session.userTeam = data.team;
+    req.session.fullname = data.fullname;
+
+    req.session.save();
+    console.log(req.session);
+
     res.redirect(`/`);
   }
 }, (req, res, next, error) => {

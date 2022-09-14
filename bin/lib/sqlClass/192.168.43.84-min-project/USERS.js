@@ -35,10 +35,13 @@ class USERS extends Database {
         if (await this.chk_duplicated_user(LineID) == 0) {
             this.statement = `EXEC INSERT_USER @LineID = '${LineID}', @Role = '${Role}'`;
             await this.Connect(this.config);
-            response_data = await this.conn.query(this.statement);
+            let response_data = await this.conn.query(this.statement);
             data = {status: true, userid: response_data.recordset[0].ID}
         } else {
-            data = {status: false, message: `LineID '${LineID}' is Duplicated!`}
+            this.statement = `SELECT ID FROM USERS WHERE LineID = '${LineID}'`;
+            await this.Connect(this.config);
+            let response_data = await this.conn.query(this.statement);
+            data = {status: false, message: `LineID '${LineID}' is Duplicated!`, userid: response_data.recordset[0].ID}
         }
 
         return data;

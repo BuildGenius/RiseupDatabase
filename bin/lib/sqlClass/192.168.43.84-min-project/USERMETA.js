@@ -11,7 +11,9 @@ class USERMETA extends Database {
 
     async getUserMeta(userid) {
         await this.Connect(this.config);
-        let data = await this.conn.query()
+        let data = await this.conn.query(`EXEC GET_USER_META @USERID = '${userid}'`);
+
+        return data.recordset[0];
     }
 
     async insert_usermeta (userid, metakey, metavalue) {
