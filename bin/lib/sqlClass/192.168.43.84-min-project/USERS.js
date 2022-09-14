@@ -60,6 +60,12 @@ class USERS extends Database {
 
         return data;
     }
+    async get_registered_user_all() {
+        await this.Connect(this.config);
+        let data = await this.conn.query('EXEC GET_REGISTERED_USER_ALL');
+
+        return data;
+    }
 }
 
 module.exports = USERS;

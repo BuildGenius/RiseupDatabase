@@ -26,16 +26,6 @@ block content
                 th Register time
                 th Approve
             tbody.table-striped.table-hover
-              tr
-                td
-                td 
-                td 
-                td 
-                td 
-                td 
-                td 
-                td 
-                td 
   script.
     // Example POST method implementation:
     async function postData(url = '', data = {}) {
@@ -74,8 +64,23 @@ block content
     }
 
     $(document).ready(async function () {
-      $('div.registed-user').ready(function () {
-        
+      $('div.registed-user').ready(async function () {
+        let html = "";
+       let data = await postData('/users/getRegistedUser', {});
+       
+        for (let i = 0 ;i < data.length;i++) {
+          html += `<tr>
+            <td>${(i + 1)}</td>
+            <td>${data[i].LineID}</td>
+            <td></td>
+            <td>${data[i].fullname}</td>
+            <td>${data[i].department}</td>
+            <td>${data[i].role}</td>
+            <td>${data[i].team}</td>
+            <td>${data[i].CrTime}</td>
+          </tr>`;
+        }
+
       });
       $('input[type=text]#find-button').keyup(function () {
         let btnes = $('button.btn-block');

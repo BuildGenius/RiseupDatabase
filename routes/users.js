@@ -2,12 +2,21 @@ var express = require('express');
 var router = express.Router();
 var md5 = require('md5');
 var mysql = require('mysql');
+var USERS = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERS');
 const mysqlCommand = require('../bin/lib/sqlClass/mySqlCommand');
 const config = require('../configuration.json').MISExpress;
+const config_min = require('../configuration.json')['min-project'];
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
+});
+
+router.post('/getRegistedUser', async function (req, res) {
+  let u = new USERS(config_min);
+  let users = await u.get_registered_user_all();
+
+  res.json(users.recordset);
 });
 
 router.post('/store', function (req, res) {
