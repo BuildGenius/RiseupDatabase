@@ -24,10 +24,22 @@ class USERS extends Database {
             "ID": {"dataType": "int", "maxLength":"null"},"LINEID": {"dataType": "nvarchar", "maxLength":"50"},"ROLE": {"dataType": "int", "maxLength":"null"},"Status": {"dataType": "int", "maxLength":"null"},"CreateAt": {"dataType": "datetime", "maxLength":"null"},"UpdateAt": {"dataType": "datetime", "maxLength":"null"}
         };
     }
-    async insert_user(LineID, Role) {
-        this.statement = `EXEC INSERT_USER @LineID = '${LineID}', @Role = '${Role}'`;
+    async chk_duplicated_user(LineID) {
         await this.Connect(this.config);
-        let data = await this.conn.query(this.statement);
+        let count = await this.conn.query(`SELECT COUNT(*) Count FROM USERS WHERE LineID = '${LineID}'`);
+
+        return count.recordset[0].Count
+    }
+    async insert_user(LineID, Role) {
+        let data;
+        if (await this.chk_duplicated_user(LineID) == 0) {
+            this.statement = `EXEC INSERT_USER @LineID = '${LineID}', @Role = '${Role}'`;
+            await this.Connect(this.config);
+            response_data = await this.conn.query(this.statement);
+            data = {status: true, userid: response_data.recordset[0].ID}
+        } else {
+            data = {status: false, message: `LineID '${LineID}' is Duplicated!`}
+        }
 
         return data;
     }

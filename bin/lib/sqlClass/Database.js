@@ -60,7 +60,11 @@ class Database {
         this.Not = false;
         this.order = [];
         this.Where = false;
-        this.limit = 1000;
+        this.limit = 20;
+        this.page = 0;
+        this.offset = 0;
+
+        this.setOffset();
     }
     SetConfig(configuration) {
         this.config = configuration;
@@ -114,6 +118,15 @@ class Database {
     delete(){
 
     }
+    setOffset() {
+        if (this.page > 0) {
+            this.offset = this.limit * this.page;
+        } else {
+            this.offset = 0;
+        }
+
+        return this.And;
+    }
     where(){
         if (arguments.length == 2) {
             this.Where = true;
@@ -134,7 +147,7 @@ class Database {
         let data;
         switch (this.statementType) {
             case "select" : 
-                this.statement = `SELECT\tTOP(${this.limit})\r\n\t${this.selector}\r\nFROM\r\n\t${this.table}`;
+                this.statement = `SELECT\t${this.selector}\r\nFROM\r\n\t${this.table}`;
             break;
         }
 
@@ -162,7 +175,13 @@ class Database {
             break;
             case "asc" : 
                 this.statement += `\r\nORDER BY\r\n\t${this.order.join(',')}\r\nASC`
+            default:
+                this.statement += `\r\nORDER BY\r\n\t${Object.keys(this.column)[0]}\r\nASC`
             break;
+        }
+
+        if (this.statementType == 'select') {
+            this.statement += `\r\nOFFSET ${this.offset} ROWS FETCH FIRST ${this.limit} ROWS ONLY`
         }
 
         if (query) {

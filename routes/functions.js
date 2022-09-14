@@ -2,11 +2,12 @@ var sql = require('mssql');
 var express = require('express');
 var router = express.Router();
 var rvdeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
-const config = require('../configuration.json').ITECToAX_REP;
+const config = require('../configuration.json')['min-project'];
 
 router.get('/getTransaction', async function (req, res) {
     let dept = new rvdeposit(config);
     let data = await dept.select().desc("TransactionID").get();
+    console.log(data);
 
     res.render('table', {title: 'fix TransactionID Demo', column: dept.column, data: data, active: 'fix Transaction Demo'});
 });
@@ -60,16 +61,16 @@ router.post('/changeStatusTransfer/exec', async function (req, res) {
 
 router.post('/getTransaction/filter', async function (req, res) {
     let data = req.body;
-    
     let dept = new rvdeposit(config);
-    dept.select();
+    dept.select()
     
     for (let i = 0;i < Object.keys(data).length;i++) {
-        dept.where(Object.keys(data)[i], Object.values(data)[i]);
+        if (Object.values(data)[i] !== '') {
+            dept.where(Object.keys(data)[i], Object.values(data)[i]);
+        }
     }
     
     let resdata = await dept.get();
-
     res.json(resdata);
 });
 

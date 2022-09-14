@@ -6,6 +6,7 @@ var config = require('../configuration.json').ITECToAX_REP;
 var config_min = require('../configuration.json')['min-project'];
 var lineLogin = require('line-login');
 var { LineClient } = require('messaging-api-line');
+const USERMETA = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA');
 var axios = require('axios').default;
 var router = express.Router();
 
@@ -43,6 +44,7 @@ router.get('/', async function(req, res, next) {
     //   res.redirect('/Signin');
     // }
   })
+  
   let tables = [];
   await schema.syncSchema();
   await schema.select("TABLES").get().then(result => {
@@ -53,8 +55,6 @@ router.get('/', async function(req, res, next) {
     title: 'SQL Express'
     , Alltable: tables
     , active: 'home'
-    , username: req.session.lineDisplayName
-    , profile: req.session.lineProfile
    });
 });
 
@@ -70,28 +70,48 @@ router.use('/callback', login.callback(async (req, res, next, token_response) =>
    * 
    * 99 = 'admin'
    */
-
-  let user = new User(config);
-  user.insert_user
-  // let access_token_valid = await axios.get('https://api.line.me/oauth2/v2.1/verify?' + token_response.access_token).catch(err => {if (err) throw err});
-  // console.log(access_token_valid);
   req.session.lineID = token_response.id_token.sub;
   req.session.lineTokenID = token_response.access_token;
   req.session.lineDisplayName = token_response.id_token.name;
   req.session.lineProfile = token_response.id_token.picture;
-
   req.session.save();
-  // Success callback
-  res.redirect('/setDefultProfile');
-  // res.json(access_token_valid);
+
+  let user = new User(config_min);
+  let userid = await user.insert_user(req.session.lineID, '1');
+
+  if (userid.status) {
+    res.redirect(`/setDefualtProfile?ID=${userid.userid}`);
+  } else {
+    res.redirect(`/`);
+  }
 }, (req, res, next, error) => {
   // Failure callback
   res.status(400).json(error);
 }))
 
-router.get('', async function () {
-
+router.get('/setDefualtProfile', async function (req, res) {
+  let data = req.query;
+  res.render('setprofile', {title: 'set new Profile', userid: data.ID});
 });
+
+router.post('/setDefaultProfile/save', async function (req, res) {
+  let data = req.body;
+  let userid = data.userid;
+  let result = {};
+
+  let UserMeta = new USERMETA(config_min);
+
+  for (let i = 0;i < Object.keys(data).length;i++) {
+    let key = Object.keys(data)[i];
+    let val = Object.values(data)[i];
+
+    if (key !== 'userid') {
+      result[key] = await UserMeta.insert_or_update_usermeta(userid, key, val);
+    }
+  }
+  
+  res.json({status: "Completed!", message: "insert detail completed. please wait for admin accept you account."});
+})
 
 router.use('/signout', (req, res) => {
   req.session.destroy();

@@ -12,15 +12,24 @@ block content
                 h2 Filter
                 hr
                 if active == 'fix Transaction Demo'
-                    form(action="/functions/getTransaction/filter", method="post") 
-                        div.row.mb-3
-                            div.col
-                                label.form-label Deposit id
-                                input#DepositID(type="text", name="depositID").form-control
-                        div.row.mb-3
-                            div.col
-                                label.form-label Deposit Branch
-                                input#DepositBranch(type="text", name="DepositBranch").form-control
+                    form(action="/functions/getTransaction/filter", method="post")
+                        div.filter-panel
+                            each prop, elemName in column
+                                if prop.dataType == "bigint" || prop.dataType == 'int'|| prop.dataType == 'money'
+                                    div.row.mb-3
+                                        div.col
+                                            label.form-label(for=`${elemName}`)= elemName
+                                            input(type="number", name=`${elemName}`, id=`${elemName}`).form-control
+                                if prop.dataType == "varchar"
+                                    div.row.mb-3
+                                        div.col
+                                            label.form-label(for=`${elemName}`)= elemName
+                                            input(type="text", name=`${elemName}`, id=`${elemName}`).form-control
+                                if prop.dataType == "datetime"
+                                    div.row.mb-3
+                                        div.col
+                                            label.form-label(for=`${elemName}`)= elemName
+                                            input(type="datetime-local", name=`${elemName}`, id=`${elemName}`).form-control
                         div.row.mb-3
                             div.col.d-flex.justify-content-center
                                 input(type="submit", value="filter").btn.btn-block.btn-success
@@ -28,7 +37,7 @@ block content
                                 input(type="reset", value="clear").btn.btn-blick.btn-primary
             div.col-10.bg-light.data-table
                 h2= `Table: ${title}`
-                div.table-responsive(style='max-height: 82vh;overflow: auto')
+                div.table-responsive
                     table.table
                         thead.table-info.sticky-top
                             tr
@@ -38,7 +47,7 @@ block content
                             each row in data
                                 tr
                                     each datatype, col in column
-                                        if datetime == 'datetime'
+                                        if datatype == 'datetime'
                                            td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`) #{prettyDate(row[col])}
                                         else
                                            td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`)= row[col]
@@ -51,9 +60,12 @@ block custom-script
             });
             $('form').submit(function (e) {
                 e.preventDefault();
-                let data = {"DepositID":"","DepositBranch":""};
-                data['DepositID'] = $(this).find('input#DepositID').val();
-                data['DepositBranch'] = $(this).find('input#DepositBranch').val();
+                let data = {};
+                for (let i = 0;i < $(this).find('input:not(.btn)').length;i++) {
+                    let id = $($(this).find('input:not(.btn)')[i]).attr('id');
+                    let val = $($(this).find('input:not(.btn)')[i]).val();
+                    data[`${id}`] = val;
+                }
 
                 postData($(this).attr('action'), data)
                 .then(async (res) => {

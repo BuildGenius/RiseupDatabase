@@ -1,0 +1,72 @@
+extends layout 
+
+block content 
+    div.container
+        form#setDefaultProfile(action="/setDefaultProfile/save", method="post") 
+            div.p-3.mt-3.rounded.shadow 
+                h3= `PROFILE ${session.lineDisplayName}` 
+                hr
+                div.row.mb-1
+                    div.col.d-flex.justify-content-center
+                        img.rounded.rounded-circle.img-thumbnail(src=`${session.lineProfile}`, style='width:15%;height:auto')
+                div.row.mb-3
+                    div.col.d-flex.justify-content-center
+                        p.text-muted= session.lineID
+                div.row.mb-3
+                    div.col
+                        label(for="position").form-label Position
+                        select#position(name="position").form-control
+                            option(value='2') officer
+                            option(value='3') team leader
+                            option(value='4') Asst. manager
+                            option(value='5') manager
+                    div.col
+                        label(for="Department").form-label Department
+                        select#department(name="department").form-control
+                            option(value="mis") MIS
+                    div.col
+                        label(for="team").form-label Team
+                        select#team(name="team").form-control
+                            option(value="ITEC") ITEC
+                            option(value="ERP") ERP
+                            option(value="LS")  LS
+                hr
+                div.row.mb-3
+                    div.col
+                        label(for="fullname").form-label Full Name
+                            b.text-danger *
+                        input#fullname(type="text", name="fullname", require).form-control
+                    div.col
+                        label(for="displayName").form-label Display Name
+                        input#displayName(type="text", name="displayName", placeholder=`${session.lineDisplayName}`).form-control
+                    div.col
+                        label(for="email").form-label Email
+                        input#email(type="email", name="email").form-control
+                div.mb-3.d-flex.justify-content-end
+                    input#userid(type="hidden", name="userid", value=`${userid}`)
+                    input(type="submit", value="save").btn.btn-primary
+block ext-script
+    script.
+        $(document).ready(function () {
+            $('form#setDefaultProfile').submit(function (e) {
+                e.preventDefault();
+                let data = {};
+
+                for (let i = 0;i < $(this).find('input').not('.btn').length;i++) {
+                    if ($($(this).find('input')[i]).val() !== undefined) {
+                        id = $($(this).find('input')[i]).attr('id');
+                        val = $($(this).find('input')[i]).val();
+                        data[`${id}`] = val;
+                    }
+                }
+                for (let i = 0;i < $(this).find('select').length;i++) {
+                    if ($($(this).find('select')[i]).val() !== undefined) {
+                        id = $($(this).find('select')[i]).attr('id')
+                        val = $($(this).find('select')[i]).val()
+                        data[`${id}`] = val;
+                    }
+                }
+
+                postData($(this).attr('action'), data);
+            });
+        })
