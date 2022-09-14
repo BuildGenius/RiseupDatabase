@@ -9,6 +9,11 @@ class USERMETA extends Database {
         };
     }
 
+    async getUserMeta(userid) {
+        await this.Connect(this.config);
+        let data = await this.conn.query()
+    }
+
     async insert_usermeta (userid, metakey, metavalue) {
         await this.Connect(this.config);
         let data = await this.conn.query(`EXEC INSERT_USER_META @USERID = ${userid}, @METAKEY = ${metakey}, @METAVALUE = ${metavalue}`);

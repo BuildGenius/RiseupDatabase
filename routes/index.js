@@ -44,7 +44,7 @@ router.get('/', async function(req, res, next) {
     //   res.redirect('/Signin');
     // }
   })
-  
+
   let tables = [];
   await schema.syncSchema();
   await schema.select("TABLES").get().then(result => {
@@ -82,6 +82,10 @@ router.use('/callback', login.callback(async (req, res, next, token_response) =>
   if (userid.status) {
     res.redirect(`/setDefualtProfile?ID=${userid.userid}`);
   } else {
+    let umt = USERMETA(config_min);
+    let data = umt.get(userid.userid);
+    console.log(data);
+    
     res.redirect(`/`);
   }
 }, (req, res, next, error) => {
@@ -156,7 +160,6 @@ router.post('/webhook', async function (req, res) {
           }
         ]);
       }
-      
     }
 
     res.json({});
