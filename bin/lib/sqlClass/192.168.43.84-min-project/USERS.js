@@ -46,8 +46,8 @@ class USERS extends Database {
 
         return data;
     }
-    async update_user(LineID, Role, Status = '1') {
-        this.statement = `EXEC UPDATE_USER @LineID = '${LineID}', @Role = '${Role}', @Status = '${Status}'`
+    async update_user(ID, Role, Status = '1') {
+        this.statement = `EXEC UPDATE_USER @ID = '${ID}', @Role = '${Role}', @Status = '${Status}'`
         await this.Connect(this.config);
         let data = await this.conn.query(this.statement);
 

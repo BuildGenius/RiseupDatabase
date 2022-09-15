@@ -19,70 +19,21 @@ router.post('/getRegistedUser', async function (req, res) {
   res.json(users.recordset);
 });
 
-router.post('/store', function (req, res) {
-  let body = req.body;
-  let d = new Date;
-  let datetime = `${d.getFullYear()}-${("0" + (d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}:${("0" + d.getMilliseconds()).slice(-4)}`;
-  var userid;
-  let userInfo;
-  var conn = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'misexpress'
-  });
-
-  conn.connect(err => {
-    if (err) {
-      throw err
-    }
-  });
-
-  conn.query(`
-    INSERT INTO users (email, firstname, lastname, password, displayname, createat, updateat)
-    VALUES (
-      '${body.username}',
-      '${body.firstname}',
-      '${body.lastname}',
-      '${md5(body.password)}',
-      '${body.displayname}',
-      '${datetime}',
-      '${datetime}'
-    )`, function (err, result) {
-      if (err) {
-        throw err
-      }
-
-      conn.query(`
-        SELECT * FROM users
-        WHERE id = ${result.insertId}
-      `, function (err, result) {
-        if (err) {
-          throw err
-        }
-
-        req.session.userid = result[0].id;
-        req.session.email = result[0].email;
-        req.session.firstname = result[0].firstname;
-        req.session.lastname = result[0].lastname;
-        req.session.displayname = result[0].displayname;
-
-        res.json({userid: req.session.userid});
-      });
-    });
-});
-
-router.post('/signin', async function (req, res) {
+router.post('/update', async function (req, res) {
   let data = req.body;
-  let stm = new mysqlCommand(config);
+  let role = 2;
+  let status = 2;
 
-  let response = await stm.from('users')
-  .select()
-  .where('email', data.username)
-  .where('password', md5(data.password))
-  .get();
+  if (!data.status) {
+    role = 0;
+    status = 0;
+  }
+  
+  let user = new USERS(config_min);
+  let response = await user.update_user(data.data, role, status);
 
-  console.log(response.result);
+  console.log(response);
+  res.json({status: "completed", message: 'this user approved!'});
 });
 
 router.post('/getAuth', function (req, res) {

@@ -66,21 +66,31 @@ block content
     $(document).ready(async function () {
       $('div.registed-user').ready(async function () {
         let html = "";
-       let data = await postData('/users/getRegistedUser', {});
+        let data = await postData('/users/getRegistedUser', {});
        
         for (let i = 0 ;i < data.length;i++) {
+          let d = new Date(data[i].CreateAt);
+          let strTime = `${('0' + d.getDate()).slice(-2)}/${('0' + (d.getMonth() + 1)).split(-2)}/${d.getFullYear()} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}:${('0' + d.getSeconds()).slice(-2)}`;
+          
           html += `<tr>
             <td>${(i + 1)}</td>
-            <td>${data[i].LineID}</td>
+            <td>${data[i].LINEID}</td>
             <td></td>
             <td>${data[i].fullname}</td>
             <td>${data[i].department}</td>
-            <td>${data[i].role}</td>
+            <td>${data[i].position}</td>
             <td>${data[i].team}</td>
-            <td>${data[i].CrTime}</td>
+            <td>${strTime}</td>
+            <td>
+              <div class="btn-group" role="group">
+              <button type="button" class="btn btn-success" role="approve" data-user="${data[i].ID}"><i class="fa-solid fa-check"></i></button>
+              <button type="button" class="btn btn-danger" role="block" data-user="${data[i].ID}"><i class="fa-solid fa-xmark"></i></button>
+            </td>
           </tr>`;
         }
 
+        $('table tbody').after(html);
+        WaitForButtonClick();
       });
       $('input[type=text]#find-button').keyup(function () {
         let btnes = $('button.btn-block');
@@ -111,4 +121,24 @@ block content
           window.location.replace(`${protocal}//${uri}${path}/${selector}`);
         }
       });
+
+      function WaitForButtonClick() {
+        $('button[role="approve"]').click(async function () {
+          let userid = $(this).data('user');
+          let data = await postData('/users/update', {data: userid, status: true});
+          
+          if (data.status == 'completed') {
+            window.location.reload();
+          }
+        });
+
+        $('button[role="block"]').click(async function () {
+          let userid = $(this).data('user');
+          let data = await postData('/users/update', {data: userid, status: false});
+          
+          if (data.status == 'completed') {
+            window.location.reload();
+          }
+        });
+      }
     });
