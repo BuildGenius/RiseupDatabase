@@ -12,12 +12,24 @@ var lineClient = new line({
         let branch = message.split('-')[1];
 
         var rv = new ReceiptDeposit(config);
-        var result = await rv.select('TransactionID').where('DepositID', id).where('DepositBranch', branch).get(false);
-        console.log(result.toString());
+        await rv.Connect(config);
 
+        var result = await rv.conn.query(`SELECT rd.TransactionID FROM ITECToAX_REP.dbo.ReceiptDeposit rd 
+        LEFT JOIN ITECToAX_REP.dbo.Deposit d ON d.DepositID = rd.DepositID 
+        AND d.DepositBranch = rd.DepositBranch 
+        AND d.TransactionID = rd.TransactionID 
+        WHERE d.DepositID = '${id}' AND d.DepositBranch = '${branch}' 
+        AND (
+            d.BPC_status = '0' 
+            OR 
+            rd.TransactionID = (SELECT MIN(TransactionID) FROM Deposit WHERE DepositID = '${id}' AND DepositBranch = '${branch}')
+        )`);
+        
         let replyMessage = "";
-        for (let i = 0;i < result.length;i++) {
-            replyMessage += `TransactionID: ${Object.values(result[i])[0].join(', ')}`;
+        if (result.recordset.length > 0) {
+            replyMessage = `TransactionID: ${Object.values(result.recordset)[0].TransactionID}`;
+        } else {
+            replyMessage = `not found depositID: ${id}, depositBranch: ${branch}`;
         }
 
         return replyMessage;
@@ -57,7 +69,7 @@ router.post('/lineCall', async (req, res) => {
                         lineClient.userId = userId;
                         lineClient.replyToken = replyToken;
 
-                        // lineClient.do();
+                        lineClient.do();
                     } 
                 break;
                 case 'follow' :

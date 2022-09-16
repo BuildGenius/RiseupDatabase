@@ -1,3 +1,4 @@
+const e = require('express');
 const sql = require('mssql');
 
 class Database {
@@ -70,8 +71,13 @@ class Database {
         this.config = configuration;
         return this;
     }
-    async Connect() {
-        this.conn = await sql.connect(this.config);
+    async Connect(config = '') {
+        if (config == '') {
+            this.conn = await sql.connect(this.config);
+        } else {
+            this.conn = await sql.connect(config);
+        }
+        
         return this;
     }
     async onCreate() {
