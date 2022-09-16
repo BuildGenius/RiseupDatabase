@@ -22,17 +22,39 @@ block content
                                     div.row.mb-3
                                         div.col
                                             label.form-label(for=`${elemName}`)= elemName
-                                            input(type="number", name=`${elemName}`, id=`${elemName}`).form-control
+                                            select(name=`sel-${elemName}`, id=`sel-${elemName}`).form-select.form-select-sm
+                                                option(value='equal') equal to
+                                                option(value='is_one_of') is one of
+                                                option(value='is_not') is not
+                                                option(value='between') between
+                                                option(value='greater_than') greater than
+                                                option(value='greater_than_or_equal') greater than or Equal
+                                                option(value='less_than') less than
+                                                option(value='less_than_or_equal') less than or Equal
+                                            input(type="number", name=`${elemName}`, id=`${elemName}`).form-control.form-control-sm
                                 if prop.dataType == "varchar" || prop.dataType == "string" || prop.dataType == "nvarchar"
                                     div.row.mb-3
                                         div.col
                                             label.form-label(for=`${elemName}`)= elemName
-                                            input(type="text", name=`${elemName}`, id=`${elemName}`).form-control
+                                            select(name=`sel-${elemName}`, id=`sel-${elemName}`).form-select.form-select-sm
+                                                option(value='equal') is exacly
+                                                option(value='before_with') before with
+                                                option(value='end_with') end with
+                                                option(value='constain') constain
+                                                option(value='not_contain') not constain
+                                                option(value='is_one_of') is one of
+                                                option(value='is_not') is not
+                                            input(type="text", name=`${elemName}`, id=`${elemName}`).form-control.form-control-sm
                                 if prop.dataType == "datetime"
                                     div.row.mb-3
                                         div.col
                                             label.form-label(for=`${elemName}`)= elemName
-                                            input(type="datetime-local", name=`${elemName}`, id=`${elemName}`).form-control
+                                            select(name=`sel-${elemName}`, id=`sel-${elemName}`).form-select.form-select-sm
+                                                option(value='equal') is exacly
+                                                option(value='before') before...
+                                                option(value='after') after...
+                                                option(value='between') between
+                                            input(type="datetime-local", name=`${elemName}`, id=`${elemName}`).form-control.form-control-sm
                         div.row.mb-3
                             div.col.d-flex.justify-content-center
                                 input(type="submit", value="filter").btn.btn-block.btn-success
@@ -64,8 +86,9 @@ block custom-script
                 let data = {};
                 for (let i = 0;i < $(this).find('input:not(.btn)').length;i++) {
                     let id = $($(this).find('input:not(.btn)')[i]).attr('id');
+                    let option = $($(this).find('select[name^="sel-"]')[i]).find('option:selected').val();
                     let val = $($(this).find('input:not(.btn)')[i]).val();
-                    data[`${id}`] = val;
+                    data[`${id}`] = {"value": val, "option": option};
                 }
 
                 postData($(this).attr('action'), data)

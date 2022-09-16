@@ -71,8 +71,8 @@ router.post('/getTransaction/filter', async function (req, res) {
     dept.select()
     
     for (let i = 0;i < Object.keys(data).length;i++) {
-        if (Object.values(data)[i] !== '') {
-            dept.where(Object.keys(data)[i], Object.values(data)[i]);
+        if (Object.values(data)[i]['value'] !== '') {
+            dept.where(Object.keys(data)[i], Object.values(data)[i]['value'], Object.values(data)[i]['option']);
         }
     }
     

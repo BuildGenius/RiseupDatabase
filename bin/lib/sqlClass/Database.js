@@ -134,8 +134,17 @@ class Database {
         return this.And;
     }
     where(){
-        if (arguments.length == 2) {
-            this.Where = true;
+        this.Where = true;
+        if (arguments.length == 3) {
+            switch(arguments[2]) {
+                case '' : 
+                break;
+                case '' :
+                break;
+                case '' :
+                break;
+            }
+        } else {
             this.equal(arguments[0], arguments[1]);
         }
 
