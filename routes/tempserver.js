@@ -12,7 +12,7 @@ router.get('/Buy', async function (req, res) {
     let data = await buy.select().desc('TransactionID').get();
     let defaultCommand = buy.select(buy.column).desc('TransactionID').toString();
 
-    res.render('table', {"title": "Buy", column: buy.column, data: data });
+    res.render('table', {"title": "Buy", column: buy.column, column: Object.keys(data[0]), data: data });
 });
 
 router.get('/Invoice', async function (req, res) {
@@ -20,7 +20,7 @@ router.get('/Invoice', async function (req, res) {
     let data = await inv.select(inv.column).desc("transactionID").get();
     let defaultCommand = inv.select(inv.column).desc("transactionID").toString();
 
-    res.render('table', {"title": "Invoice", column: inv.column, data: data});
+    res.render('table', {"title": "Invoice", column: inv.column, column: Object.keys(data[0]), data: data});
 });
 
 router.get('/deposit', async function (req, res) {
@@ -29,7 +29,7 @@ router.get('/deposit', async function (req, res) {
     let defaultCommand = dept.select(dept.column).desc("TransactionID").toString()
     console.log(defaultCommand);
 
-    res.render('table', {"title": "Receipt Deposit", column: dept.column, data: data});
+    res.render('table', {"title": "Receipt Deposit", column: dept.column, column: Object.keys(data[0]), data: data});
 });
 
 router.get('/SI', async function (req, res) {
@@ -37,14 +37,14 @@ router.get('/SI', async function (req, res) {
     let data = await stkIn.select().where("SIBranch", 4).where("CAST(CrTime as date)", '2022-09-01').get();
     let defaultCommand = await stkIn.select(stkIn.column).toString();
 
-    res.render('table', {"title": "Transfer", column: stkIn.column, data: data});
+    res.render('table', {"title": "Transfer", filterColumn: stkIn.column, column: Object.keys(data[0]), data: data});
 });
 
 router.get('/InventoryInOut', async function (req, res) {
     let invinout = new InventoryInOut(config);
     let data = await invinout.select().where("CAST(CrTime as date)", '2022-09-01').get();
 
-    res.render('table', {"title": "Transfer", column: invinout.column, data: data});
+    res.render('table', {"title": "Transfer", filterColumn: invinout.column, column: Object.keys(data[0]), data: data});
 })
 
 module.exports = router;

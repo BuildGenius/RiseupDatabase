@@ -1,8 +1,9 @@
 var express = require("express");
-const { DateTime } = require("mssql");
 var router = express.Router();
 var authRouter = require('./auth');
+var config = require('../configuration.json').ITECToAX_REP;
 var line = require('../bin/lib/linesFunction/Line');
+var ReceiptDeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
 // const { Line } = require("messaging-api-line");
 var lineClient = new line({
     "DP": async (messageText) => {
@@ -10,15 +11,13 @@ var lineClient = new line({
         let id = message.split('-')[0];
         let branch = message.split('-')[1];
 
-        var ReceiptDeposit = require('../sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
-        var config = require('../../../configuration.json').ITECToAX_REP;
         var rv = new ReceiptDeposit(config);
-
-        var result = await rv.select('TransactionID').where('DepositID', id).where('DepositBranch', branch).get();
+        var result = await rv.select('TransactionID').where('DepositID', id).where('DepositBranch', branch).get(false);
+        console.log(result.toString());
 
         let replyMessage = "";
         for (let i = 0;i < result.length;i++) {
-            replyMessage += `TransactionID: ${Object.values(result[i])[0]}\r\n`;
+            replyMessage += `TransactionID: ${Object.values(result[i])[0].join(', ')}`;
         }
 
         return replyMessage;

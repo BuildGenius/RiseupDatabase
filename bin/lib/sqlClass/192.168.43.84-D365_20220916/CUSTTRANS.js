@@ -1,0 +1,120 @@
+const Database = require('../Database');
+
+class CUSTTRANS extends Database {
+    constructor(configuration) {
+        super(configuration);
+        this.table = 'CUSTTRANS';
+        this.column = {
+            "POSTINGPROFILECLOSE": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"ACCOUNTINGEVENT": {"dataType": "bigint", "maxLength":"null"}
+            ,"ACCOUNTNUM": {"dataType": "nvarchar", "maxLength":"20"}
+            ,"AMOUNTCUR": {"dataType": "numeric", "maxLength":"null"}
+            ,"AMOUNTMST": {"dataType": "numeric", "maxLength":"null"}
+            ,"APPROVED": {"dataType": "int", "maxLength":"null"}
+            ,"APPROVER": {"dataType": "bigint", "maxLength":"null"}
+            ,"BANKCENTRALBANKPURPOSECODE": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"BANKCENTRALBANKPURPOSETEXT": {"dataType": "nvarchar", "maxLength":"210"}
+            ,"BANKLCEXPORTLINE": {"dataType": "bigint", "maxLength":"null"}
+            ,"BANKREMITTANCEFILEID": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"BILLOFEXCHANGEID": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"BILLOFEXCHANGESEQNUM": {"dataType": "int", "maxLength":"null"}
+            ,"BILLOFEXCHANGESTATUS": {"dataType": "int", "maxLength":"null"}
+            ,"CANCELLEDPAYMENT": {"dataType": "int", "maxLength":"null"}
+            ,"CASHDISCCODE": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"CASHDISCBASEDATE": {"dataType": "datetime", "maxLength":"null"}
+            ,"CASHPAYMENT": {"dataType": "int", "maxLength":"null"}
+            ,"CLOSED": {"dataType": "datetime", "maxLength":"null"}
+            ,"COLLECTIONLETTER": {"dataType": "int", "maxLength":"null"}
+            ,"COLLECTIONLETTERCODE": {"dataType": "int", "maxLength":"null"}
+            ,"COMPANYBANKACCOUNTID": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"CONTROLNUM": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"CORRECT": {"dataType": "int", "maxLength":"null"}
+            ,"CURRENCYCODE": {"dataType": "nvarchar", "maxLength":"3"}
+            ,"CUSTBILLINGCLASSIFICATION": {"dataType": "bigint", "maxLength":"null"}
+            ,"CUSTEXCHADJUSTMENTREALIZED": {"dataType": "numeric", "maxLength":"null"}
+            ,"CUSTEXCHADJUSTMENTUNREALIZED": {"dataType": "numeric", "maxLength":"null"}
+            ,"DEFAULTDIMENSION": {"dataType": "bigint", "maxLength":"null"}
+            ,"DELIVERYMODE": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"DIRECTDEBITMANDATE": {"dataType": "bigint", "maxLength":"null"}
+            ,"DOCUMENTDATE": {"dataType": "datetime", "maxLength":"null"}
+            ,"DOCUMENTNUM": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"DUEDATE": {"dataType": "datetime", "maxLength":"null"}
+            ,"EUROTRIANGULATION": {"dataType": "int", "maxLength":"null"}
+            ,"EXCHADJUSTMENT": {"dataType": "numeric", "maxLength":"null"}
+            ,"EXCHADJUSTMENTREPORTING": {"dataType": "numeric", "maxLength":"null"}
+            ,"EXCHRATE": {"dataType": "numeric", "maxLength":"null"}
+            ,"EXCHRATESECOND": {"dataType": "numeric", "maxLength":"null"}
+            ,"FIXEDEXCHRATE": {"dataType": "int", "maxLength":"null"}
+            ,"INTEREST": {"dataType": "int", "maxLength":"null"}
+            ,"INVOICE": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"INVOICEPROJECT": {"dataType": "int", "maxLength":"null"}
+            ,"LASTEXCHADJ": {"dataType": "datetime", "maxLength":"null"}
+            ,"LASTEXCHADJRATE": {"dataType": "numeric", "maxLength":"null"}
+            ,"LASTEXCHADJRATEREPORTING": {"dataType": "numeric", "maxLength":"null"}
+            ,"LASTEXCHADJVOUCHER": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"LASTSETTLEACCOUNTNUM": {"dataType": "nvarchar", "maxLength":"20"}
+            ,"LASTSETTLECOMPANY": {"dataType": "nvarchar", "maxLength":"4"}
+            ,"LASTSETTLEDATE": {"dataType": "datetime", "maxLength":"null"}
+            ,"LASTSETTLEVOUCHER": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"MCRPAYMORDERID": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"OFFSETRECID": {"dataType": "bigint", "maxLength":"null"}
+            ,"ORDERACCOUNT": {"dataType": "nvarchar", "maxLength":"20"}
+            ,"PAYMID": {"dataType": "nvarchar", "maxLength":"200"}
+            ,"PAYMMETHOD": {"dataType": "int", "maxLength":"null"}
+            ,"PAYMMODE": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"PAYMREFERENCE": {"dataType": "nvarchar", "maxLength":"35"}
+            ,"PAYMSPEC": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"POSTINGPROFILE": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"PREPAYMENT": {"dataType": "int", "maxLength":"null"}
+            ,"REASONREFRECID": {"dataType": "bigint", "maxLength":"null"}
+            ,"REPORTINGCURRENCYAMOUNT": {"dataType": "numeric", "maxLength":"null"}
+            ,"REPORTINGCURRENCYEXCHRATE": {"dataType": "numeric", "maxLength":"null"}
+            ,"REPORTINGCURRENCYEXCHRATESECONDARY": {"dataType": "numeric", "maxLength":"null"}
+            ,"REPORTINGCURRENCYCROSSRATE": {"dataType": "numeric", "maxLength":"null"}
+            ,"REPORTINGEXCHADJUSTMENTREALIZED": {"dataType": "numeric", "maxLength":"null"}
+            ,"REPORTINGEXCHADJUSTMENTUNREALIZED": {"dataType": "numeric", "maxLength":"null"}
+            ,"RETAILCUSTTRANS": {"dataType": "int", "maxLength":"null"}
+            ,"RETAILSTOREID": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"RETAILTERMINALID": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"RETAILTRANSACTIONID": {"dataType": "nvarchar", "maxLength":"44"}
+            ,"SETTLEAMOUNTCUR": {"dataType": "numeric", "maxLength":"null"}
+            ,"SETTLEAMOUNTMST": {"dataType": "numeric", "maxLength":"null"}
+            ,"SETTLEAMOUNTREPORTING": {"dataType": "numeric", "maxLength":"null"}
+            ,"SETTLEMENT": {"dataType": "int", "maxLength":"null"}
+            ,"TAXINVOICESALESID": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"THIRDPARTYBANKACCOUNTID": {"dataType": "nvarchar", "maxLength":"10"}
+            ,"TRANSDATE": {"dataType": "datetime", "maxLength":"null"}
+            ,"TRANSTYPE": {"dataType": "int", "maxLength":"null"}
+            ,"TXT": {"dataType": "nvarchar", "maxLength":"512"}
+            ,"VOUCHER": {"dataType": "nvarchar", "maxLength":"40"}
+            ,"PAYMSCHEDID": {"dataType": "nvarchar", "maxLength":"30"}
+            ,"PAYMTERMID": {"dataType": "nvarchar", "maxLength":"100"}
+            ,"DATAAREAID": {"dataType": "nvarchar", "maxLength":"4"}
+            ,"PARTITION": {"dataType": "bigint", "maxLength":"null"}
+            ,"RECID": {"dataType": "bigint", "maxLength":"null"}
+            ,"RECVERSION": {"dataType": "int", "maxLength":"null"}
+            ,"MODIFIEDDATETIME": {"dataType": "datetime", "maxLength":"null"}
+            ,"MODIFIEDBY": {"dataType": "nvarchar", "maxLength":"20"}
+            ,"MODIFIEDTRANSACTIONID": {"dataType": "bigint", "maxLength":"null"}
+            ,"CREATEDDATETIME": {"dataType": "datetime", "maxLength":"null"}
+            ,"CREATEDBY": {"dataType": "nvarchar", "maxLength":"20"}
+            ,"CREATEDTRANSACTIONID": {"dataType": "bigint", "maxLength":"null"}
+            ,"BPC_BILLAMOUNT": {"dataType": "numeric", "maxLength":"null"}
+            ,"BPC_BILLFINISH": {"dataType": "int", "maxLength":"null"}
+            ,"BPC_INVOICEAMOUNT": {"dataType": "numeric", "maxLength":"null"}
+            ,"BPC_INVOICEFINISH": {"dataType": "int", "maxLength":"null"}
+            ,"BPC_MARK": {"dataType": "int", "maxLength":"null"}
+            ,"BPC_MARKAMOUNT": {"dataType": "numeric", "maxLength":"null"}
+            ,"BPC_RECEIPTAMOUNT": {"dataType": "numeric", "maxLength":"null"}
+            ,"BPC_RECEIPTFINISH": {"dataType": "int", "maxLength":"null"}
+            ,"CREDMANEXCLUDEFROMCREDITCONTROL": {"dataType": "int", "maxLength":"null"}
+            ,"INVOICETYPE_IT": {"dataType": "int", "maxLength":"null"}
+            ,"CUSTAUTOMATIONEXCLUDE": {"dataType": "int", "maxLength":"null"}
+            ,"CUSTAUTOMATIONPREDUNNINGSENT": {"dataType": "int", "maxLength":"null"}
+            ,"CUSTAUTOMATIONPREDICTIONSENT": {"dataType": "int", "maxLength":"null"}
+            ,"SETTLEAMOUNT_MX": {"dataType": "numeric", "maxLength":"null"}
+        };
+    }
+}
+
+module.exports = CUSTTRANS;

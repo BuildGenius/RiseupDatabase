@@ -112,6 +112,10 @@ html
                        a#TempServer(class="dropdown-item active", href="/functions/changeStatusTransfer") Change Status Transfer
                       else 
                         a#TempServer(class="dropdown-item", href="/functions/changeStatusTransfer") Change Status Transfer
+                      if active == "CustTrans"
+                       a#TempServer(class="dropdown-item active", href="/functions/getCustTrans") CustTrans
+                      else 
+                        a#TempServer(class="dropdown-item", href="/functions/getCustTrans") CustTrans
                     //- li
                     //-   hr(class="dropdown-divider")
                     //- li

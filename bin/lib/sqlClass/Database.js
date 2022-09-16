@@ -147,7 +147,7 @@ class Database {
         let data;
         switch (this.statementType) {
             case "select" : 
-                this.statement = `SELECT\t${this.selector}\r\nFROM\r\n\t${this.table}`;
+                this.statement = `SELECT\t${this.selector}\r\nFROM\r\n\t[${this.config.database}].[dbo].[${this.table}]`;
             break;
         }
 
@@ -181,7 +181,8 @@ class Database {
         }
 
         if (this.statementType == 'select') {
-            this.statement += `\r\nOFFSET ${this.offset} ROWS FETCH FIRST ${this.limit} ROWS ONLY`
+            this.statement += `\r\nOFFSET ${this.offset} ROWS\r\n
+            FETCH FIRST ${this.limit} ROWS ONLY`
         }
 
         if (query) {

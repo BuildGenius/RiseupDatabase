@@ -1,11 +1,14 @@
 extends layout
 
--function prettyDate(datetime) {
-    -let d = new Date(datetime)
-    -return ('0' + d.getDate()).slice(-2)+'/'+('0' + (d.getMonth() + 1)).slice(-2)+'/'+d.getFullYear()
--}
-
 block content 
+    -function prettyDate(datetime) {
+        -if (datetime instanceof Date) {
+            -let d = new Date(datetime)
+            -return `${('0' + d.getDate()).slice(-2)}/${('0' + (d.getMonth() + 1)).slice(-2)}/${d.getFullYear()} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}:${('0' + d.getSeconds()).slice(-2)}`
+        -} else {
+            -return `${datetime == null ? '':datetime}`;
+        -}
+    -}
     div.container-fluid.mt-3
         div.row
             div.col-2
@@ -14,13 +17,13 @@ block content
                 if active == 'fix Transaction Demo'
                     form(action="/functions/getTransaction/filter", method="post")
                         div.filter-panel
-                            each prop, elemName in column
-                                if prop.dataType == "bigint" || prop.dataType == 'int'|| prop.dataType == 'money'
+                            each prop, elemName in filterColumn
+                                if prop.dataType == "bigint" || prop.dataType == 'int'|| prop.dataType == 'money' || prop.dataType == 'numberic'
                                     div.row.mb-3
                                         div.col
                                             label.form-label(for=`${elemName}`)= elemName
                                             input(type="number", name=`${elemName}`, id=`${elemName}`).form-control
-                                if prop.dataType == "varchar"
+                                if prop.dataType == "varchar" || prop.dataType == "string" || prop.dataType == "nvarchar"
                                     div.row.mb-3
                                         div.col
                                             label.form-label(for=`${elemName}`)= elemName
@@ -37,20 +40,18 @@ block content
                                 input(type="reset", value="clear").btn.btn-blick.btn-primary
             div.col-10.bg-light.data-table
                 h2= `Table: ${title}`
+                hr
                 div.table-responsive
                     table.table
                         thead.table-info.sticky-top
                             tr
-                                each datatype, col in column
-                                    th(class=`${datatype}`)= col
+                                each col in column
+                                    th.text-center= col
                         tbody
                             each row in data
                                 tr
-                                    each datatype, col in column
-                                        if datatype == 'datetime'
-                                           td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`) #{prettyDate(row[col])}
-                                        else
-                                           td(class=`${datatype.dataType}`, weight=`${datatype.maxLength == 'null' ? 25:datatype.maxLength}pt`)= row[col]
+                                    each col in column
+                                        td(style='width:1px; white-space: nowrap;')= `${prettyDate(row[col])}`
 
 block custom-script
     script.
