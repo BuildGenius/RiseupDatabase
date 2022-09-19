@@ -5,6 +5,8 @@ class Database {
     constructor(configuration){
         this.conn = "";
         this.config = {};
+        let datetime_notdash = /[\.\/\-]/m;
+        let datetime_dash = '-';
         this.SetConfig(configuration);
         this.statement = "";
         this.opearte = {
@@ -38,23 +40,64 @@ class Database {
             },
             "IsOneOf": {
                 "type": ['string', 'int', 'datetime', 'date'],
+                "data": {},
+                "mulvalue": true
+            },
+            "IsNotOneOf": {
+                "type": ['string', 'int', 'datetime', 'date'],
+                "data": {},
+                "mulvalue": true
+            },
+            "IsNot": {
+                "type": ['string', 'int', 'datetime', 'date'],
                 "data": {}
             },
             "Between": {
-                "type": ['int', 'datetime', 'date'],
+                "type": ['string', 'int', 'datetime', 'date'],
+                "data": {},
+                "mulvalue": true
+            },
+            "IsNull" : {
+                "type": ['string', 'int', 'datetime', 'date'],
+                "data": {}
+            },
+            "IsNotNull" : {
+                "type": ['string', 'int', 'datetime', 'date'],
+                "data": {}
+            },
+            "beginWith" : {
+                "type": ['string'],
+                "data": {}
+            },
+            "not_beginWith" : {
+                "type": ['string'],
+                "data": {}
+            },
+            "endWith" : {
+                "type": ['string'],
+                "data": {}
+            },
+            "notendWith" : {
+                "type": ['string'],
+                "data": {}
+            },
+            "constain" : {
+                "type": ['string'],
+                "data": {}
+            },
+            "notConstain": {
+                "type": ['string'],
+                "data": {}
+            },
+            "before" : {
+                "type": ['datetime', 'date'],
+                "data": {}
+            },
+            "after" : {
+                "type": ['datetime', 'date'],
                 "data": {}
             }
         };
-        
-        this.Equal = this.opearte.equal.data;
-        this.NotEqual = this.opearte.NotEqual.data;
-        this.Constraint = this.opearte.Constraint.data;
-        this.GreateThan = this.opearte.GreateThan.data;
-        this.GreaterThanOrEqual = this.opearte.GreaterThanOrEqual.data;
-        this.LessThan = this.opearte.LessThan.data;
-        this.LessThanOrEqual = this.opearte.LessThanOrEqual.data;
-        this.IsOneOf = this.opearte.IsOneOf.data;
-        this.Between = this.opearte.Between.data;
 
         this.And = false;
         this.Or = false;
@@ -115,7 +158,7 @@ class Database {
 
         return this;
     }
-    insert(){
+    save(){
 
     }
     update(){
@@ -137,11 +180,65 @@ class Database {
         this.Where = true;
         if (arguments.length == 3) {
             switch(arguments[2]) {
-                case '' : 
+                case 'equal' :
+                    this.equal(arguments[0], arguments[1]); 
                 break;
-                case '' :
+                case 'IsOneOf' :
+                    this.is_one_of(arguments[0], arguments[1]);
                 break;
-                case '' :
+                case 'IsNotOneOf' :
+                    this.is_not_one_of(arguments[0], arguments[1]);
+                break;
+                case 'IsNot' :
+                    this.is_not(arguments[0], arguments[1]);    
+                break;
+                case 'Between':
+                    this.between(arguments[0], arguments[1], arguments[2]); 
+                break;
+                case 'GreateThan':
+                    this.greatethan(arguments[0], arguments[1]); 
+                break;
+                case 'GreaterThanOrEqual':
+                    this.greaterthan_or_equal(arguments[0], arguments[1]);
+                break;
+                case 'LessThan':
+                    this.lessthan(arguments[0], arguments[1]);
+                break;
+                case 'lessthan_or_equal':
+                    this.lessthan_or_equal(arguments[0], arguments[1]);
+                break;
+                case 'IsNull':
+                    this.isnull(arguments[0], arguments[1]);
+                break;
+                case 'isnotnull': 
+                    this.isnotnull(arguments[0], arguments[1]);
+                break;
+                case 'beginWith':
+                    this.beginwith(arguments[0], arguments[1]);
+                break;
+                case 'Notbeginwith':
+                    this.not_beginWith(arguments[0], arguments[1]);
+                break;
+                case 'endWith':
+                    this.endwith(arguments[0], arguments[1]);
+                break;
+                case 'Notendwith':
+                    this.Notendwith(arguments[0], arguments[1]);
+                break;
+                case 'constain':
+                    this.constain(arguments[0], arguments[1]);
+                break;
+                case 'notConstain':
+                    this.notConstain(arguments[0], arguments[1]);
+                break;
+                case 'before': 
+                    this.before(arguments[0], preg_replace(datetime_notdash, datetime_dash,arguments[1]));
+                break;
+                case 'after': 
+                    this.after(arguments[0], preg_replace(datetime_notdash, datetime_dash,arguments[1]));
+                break;
+                default :
+                    this.equal(arguments[0], arguments[1]); 
                 break;
             }
         } else {
@@ -154,8 +251,80 @@ class Database {
 
     }
     equal(key, value) {
-        this.Equal[key] = value;
         this.opearte.equal.data[key] = value;
+        return this;
+    }
+    is_one_of (key, value) {
+        this.IsOneOf[key] = value;
+        this.opearte.IsOneOf.data[key] = value;
+        return this;
+    }
+    is_not_one_of (key, value) {
+        this.opearte.IsNotOneOf.data[key] = value;
+        return this;
+    }
+    is_not (key, value) {
+        this.opearte.IsNot.data[key] = value;
+        return this;
+    }
+    between (key, value) {
+        this.opearte.Between.data[key] = value;
+        return this;
+    }
+    greatethan (key, value) {
+        this.opearte.GreateThan.data[key] = value;
+        return this;
+    }
+    greaterthan_or_equal (key, value) {
+        this.opearte.GreaterThanOrEqual.data[key] = value;
+        return this;
+    }
+    lessthan (key, value) {
+        this.opearte.LessThan.data[key] = value;
+        return this;
+    }
+    lessthan_or_equal (key, value) {
+        this.opearte.LessThanOrEqual.data[key] = value;
+        return this;
+    }
+    isnull (key, value) {
+        this.opearte.IsNull.data[key] = value;
+        return this;
+    }
+    isnotnull (key, value) {
+        this.opearte.IsNotNull.data[key] = value;
+        return this;
+    }
+    beginwith (key, value) {
+        this.opearte.beginWith.data[key] = value;
+        return this;
+    }
+    Notbeginwith (key, value) {
+        this.opearte.not_beginWith.data[key] = value;
+        return this;
+    }
+    endwith (key, value) {
+        this.opearte.endWith.data[key] = value;
+        return this;
+    }
+    Notendwith (key, value) {
+        this.opearte.notendWith.data[key] = value;
+        return this;
+    }
+    constain (key, value) {
+        this.opearte.constain.data[key] = value;
+        return this;
+    }
+    notConstain (key, value) {
+        this.opearte.notConstain.data[key] = value;
+        return this;
+    }
+    before (key, value) {
+        this.opearte.before.data[key] = value;
+        return this;
+    }
+    after (key, value) {
+        this.opearte.after.data[key] = value;
         return this;
     }
     async get(query = true){
@@ -174,10 +343,95 @@ class Database {
 
                 if (Object.values(this.opearte[operade].data).length > 0) {
                     for (let ii = 0;ii < Object.keys(data).length;ii++) {
-                        this.statement += `\r\n\t${Object.keys(data)[ii]} = '${Object.values(data)[ii]}'\r\n`
+                        switch(arguments[2]) {
+                            case 'equal' :
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} = '${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'IsOneOf' :
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} IN (${Object.values(data)[ii].map((value, index, array) => {
+                                    if (index !== array.length) {
+                                        return `'${value}', `;
+                                    } else {
+                                        return `'${value}'`;
+                                    }
+                                })})\r\n`
+                            break;
+                            case 'IsNotOneOf' :
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} NOT IN (${Object.values(data)[ii].map((value, index, array) => {
+                                    if (index !== array.length) {
+                                        return `'${value}', `;
+                                    } else {
+                                        return `'${value}'`;
+                                    }
+                                })})\r\n`
+                            break;
+                            case 'IsNot' :
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} <> '${Object.values(data)[ii]}'\r\n` 
+                            break;
+                            case 'Between':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} BETWEEN '${Object.values(data)[ii].join(' AND ')}'\r\n`
+                            break;
+                            case 'GreateThan':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} > '${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'GreaterThanOrEqual':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} >= '${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'LessThan':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} < '${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'lessthan_or_equal':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} <= '${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'IsNull':
+                                this.statement += `\r\n\t${Object.value(data)[ii].join()} IS NULL'\r\n`
+                            break;
+                            case 'isnotnull': 
+                            this.statement += `\r\n\t${Object.value(data)[ii].join()} IS NOT NULL'\r\n`
+                            break;
+                            case 'beginWith':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} LIKE '${Object.values(data)[ii]}%'\r\n`
+                            break;
+                            case 'Notbeginwith':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} NOT LIKE '${Object.values(data)[ii]}%'\r\n`
+                            break;
+                            case 'endWith':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} LIKE '%${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'Notendwith':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} NOT LIKE '%${Object.values(data)[ii]}'\r\n`
+                            break;
+                            case 'constain':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} LIKE '%${Object.values(data)[ii]}%'\r\n`
+                            break;
+                            case 'notConstain':
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} NOT LIKE '%${Object.values(data)[ii]}%'\r\n`
+                            break;
+                            case 'before': 
+                                if (Object.keys(data)[ii]['type'] == 'date') {
+                                    this.statement += `\r\n\tCAST(${Object.keys(data)[ii]} as date) < '${Object.values(data)[ii]}'\r\n`
+                                } else {
+                                    this.statement += `\r\n\t${Object.keys(data)[ii]} < '${Object.values(data)[ii]}'\r\n`
+                                }
+                            break;
+                            case 'after': 
+                            if (Object.keys(data)[ii]['type'] == 'date') {
+                                this.statement += `\r\n\tCAST(${Object.keys(data)[ii]} as date) > '${Object.values(data)[ii]}'\r\n`
+                            } else {
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} > '${Object.values(data)[ii]}'\r\n`
+                            }
+                            break;
+                            default :
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} = '${Object.values(data)[ii]}'\r\n`
+                            break;
+                        }
 
                         if (ii != (Object.keys(data).length - 1) && (!this.And && !this.Or && !this.Not)) {
                             this.statement += `\r\n\tAND\r\n\t`;
+                        } else if (ii != (Object.keys(data).length - 1) && (this.And && !this.Or && !this.Not)) {
+                            this.statement += `\r\n\tAND\r\n\t`;
+                        } else if (ii != (Object.keys(data).length - 1) && (!this.And && this.Or && !this.Not)) {
+                            this.statement += `\r\n\tOR\r\n\t`;
                         }
                     }
                 }

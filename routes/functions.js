@@ -4,6 +4,7 @@ var router = express.Router();
 var rvdeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
 var CustTrans = require('../bin/lib/sqlClass/192.168.43.84-D365_20220916/CUSTTRANS');
 const config = require('../configuration.json')['min-project'];
+const config_itec = require('../configuration.json')['DIY_ITEC'];
 const config_test = require('../configuration.json').SS20220916;
 
 router.get('/getTransaction/:page?', async function (req, res) {
@@ -67,7 +68,7 @@ router.post('/changeStatusTransfer/exec', async function (req, res) {
 
 router.post('/getTransaction/filter', async function (req, res) {
     let data = req.body;
-    let dept = new rvdeposit(config);
+    let dept = new rvdeposit(config_itec);
     dept.select()
     
     for (let i = 0;i < Object.keys(data).length;i++) {
@@ -75,7 +76,10 @@ router.post('/getTransaction/filter', async function (req, res) {
             dept.where(Object.keys(data)[i], Object.values(data)[i]['value'], Object.values(data)[i]['option']);
         }
     }
-    
+
+    let dp = await dept.get(false);
+    console.log(dp.toString());
+
     let resdata = await dept.get();
     res.json(resdata);
 });
