@@ -96,6 +96,14 @@ class Database {
             "after" : {
                 "type": ['datetime', 'date'],
                 "data": {}
+            },
+            "between_date" : {
+                "type": ['datetime', 'date'],
+                "data": {}
+            },
+            "date_equal": {
+                "type": ['datetime', 'date'],
+                "data": {}
             }
         };
 
@@ -183,59 +191,65 @@ class Database {
                 case 'equal' :
                     this.equal(arguments[0], arguments[1]); 
                 break;
-                case 'IsOneOf' :
+                case 'is_one_of' :
                     this.is_one_of(arguments[0], arguments[1]);
                 break;
-                case 'IsNotOneOf' :
+                case 'is_not_one_of' :
                     this.is_not_one_of(arguments[0], arguments[1]);
                 break;
-                case 'IsNot' :
+                case 'is_not' :
                     this.is_not(arguments[0], arguments[1]);    
                 break;
-                case 'Between':
-                    this.between(arguments[0], arguments[1], arguments[2]); 
+                case 'between':
+                    this.between(arguments[0], arguments[1]); 
                 break;
-                case 'GreateThan':
+                case 'greater_than':
                     this.greatethan(arguments[0], arguments[1]); 
                 break;
-                case 'GreaterThanOrEqual':
+                case 'greater_than_or_equal':
                     this.greaterthan_or_equal(arguments[0], arguments[1]);
                 break;
-                case 'LessThan':
+                case 'less_than':
                     this.lessthan(arguments[0], arguments[1]);
                 break;
-                case 'lessthan_or_equal':
+                case 'less_than_or_equal':
                     this.lessthan_or_equal(arguments[0], arguments[1]);
                 break;
-                case 'IsNull':
+                case 'is_null':
                     this.isnull(arguments[0], arguments[1]);
                 break;
-                case 'isnotnull': 
+                case 'is_not_null': 
                     this.isnotnull(arguments[0], arguments[1]);
                 break;
-                case 'beginWith':
+                case 'begin_with':
                     this.beginwith(arguments[0], arguments[1]);
                 break;
-                case 'Notbeginwith':
+                case 'not_begin_with':
                     this.not_beginWith(arguments[0], arguments[1]);
                 break;
-                case 'endWith':
+                case 'end_with':
                     this.endwith(arguments[0], arguments[1]);
                 break;
-                case 'Notendwith':
+                case 'not_end_with':
                     this.Notendwith(arguments[0], arguments[1]);
                 break;
                 case 'constain':
                     this.constain(arguments[0], arguments[1]);
                 break;
-                case 'notConstain':
+                case 'not_contain':
                     this.notConstain(arguments[0], arguments[1]);
                 break;
+                case 'date_equal': 
+                    this.date_equal(arguments[0], arguments[1]);
+                break;
                 case 'before': 
-                    this.before(arguments[0], preg_replace(datetime_notdash, datetime_dash,arguments[1]));
+                    this.before(arguments[0], arguments[1]);
                 break;
                 case 'after': 
-                    this.after(arguments[0], preg_replace(datetime_notdash, datetime_dash,arguments[1]));
+                    this.after(arguments[0], arguments[1]);
+                break;
+                case 'date_between':
+                    this.date_between(arguments[0], arguments[1]);
                 break;
                 default :
                     this.equal(arguments[0], arguments[1]); 
@@ -251,6 +265,10 @@ class Database {
 
     }
     equal(key, value) {
+        this.opearte.equal.data[key] = value;
+        return this;
+    }
+    date_equal(key, value) {
         this.opearte.equal.data[key] = value;
         return this;
     }
@@ -327,6 +345,10 @@ class Database {
         this.opearte.after.data[key] = value;
         return this;
     }
+    date_between (key, value) {
+        this.opearte.between_date.data[key] = value;
+        return this;
+    }
     async get(query = true){
         let data;
         switch (this.statementType) {
@@ -343,7 +365,7 @@ class Database {
 
                 if (Object.values(this.opearte[operade].data).length > 0) {
                     for (let ii = 0;ii < Object.keys(data).length;ii++) {
-                        switch(arguments[2]) {
+                        switch(operade) {
                             case 'equal' :
                                 this.statement += `\r\n\t${Object.keys(data)[ii]} = '${Object.values(data)[ii]}'\r\n`
                             break;
@@ -369,7 +391,7 @@ class Database {
                                 this.statement += `\r\n\t${Object.keys(data)[ii]} <> '${Object.values(data)[ii]}'\r\n` 
                             break;
                             case 'Between':
-                                this.statement += `\r\n\t${Object.keys(data)[ii]} BETWEEN '${Object.values(data)[ii].join(' AND ')}'\r\n`
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} BETWEEN '${Object.values(data)[ii][0]}' AND '${Object.values(data)[ii][1]}'\r\n`
                             break;
                             case 'GreateThan':
                                 this.statement += `\r\n\t${Object.keys(data)[ii]} > '${Object.values(data)[ii]}'\r\n`
@@ -419,6 +441,20 @@ class Database {
                                 this.statement += `\r\n\tCAST(${Object.keys(data)[ii]} as date) > '${Object.values(data)[ii]}'\r\n`
                             } else {
                                 this.statement += `\r\n\t${Object.keys(data)[ii]} > '${Object.values(data)[ii]}'\r\n`
+                            }
+                            break;
+                            case 'between_date': 
+                            if (Object.keys(data)[ii]['type'] == 'date') {
+                                this.statement += `\r\n\tCAST(${Object.keys(data)[ii]} as date) BETWEEN '${Object.values(data)[ii][0].replace(this.datetime_notdash, this.datetime_dash).replace('T', ' ')}' AND '${Object.values(data)[ii][1].replace(this.datetime_notdash, this.datetime_dash).replace('T', ' ')}'\r\n`
+                            } else {
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} BETWEEN '${Object.values(data)[ii][0].replace(this.datetime_notdash, this.datetime_dash).replace('T', ' ')}' AND '${Object.values(data)[ii][1].replace(this.datetime_notdash, this.datetime_dash).replace('T', ' ')}'\r\n`
+                            }
+                            break;
+                            case 'date_equal': 
+                            if (Object.keys(data)[ii]['type'] == 'date') {
+                                this.statement += `\r\n\tCAST(${Object.keys(data)[ii]} as date) = '${Object.values(data)[ii]}'\r\n`
+                            } else {
+                                this.statement += `\r\n\t${Object.keys(data)[ii]} = '${Object.values(data)[ii]}'\r\n`
                             }
                             break;
                             default :

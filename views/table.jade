@@ -25,12 +25,15 @@ block content
                                             select(name=`sel-${elemName}`, id=`sel-${elemName}`).form-select.form-select-sm
                                                 option(value='equal') equal to
                                                 option(value='is_one_of') is one of
+                                                option(value='is_not_one_of') is not one of
                                                 option(value='is_not') is not
                                                 option(value='between') between
                                                 option(value='greater_than') greater than
                                                 option(value='greater_than_or_equal') greater than or Equal
                                                 option(value='less_than') less than
                                                 option(value='less_than_or_equal') less than or Equal
+                                                option(value='is_null') is null
+                                                option(value='is_not_null') is not null
                                             input(type="number", name=`${elemName}`, id=`${elemName}`).form-control.form-control-sm
                                 if prop.dataType == "varchar" || prop.dataType == "string" || prop.dataType == "nvarchar"
                                     div.row.mb-3
@@ -38,8 +41,10 @@ block content
                                             label.form-label(for=`${elemName}`)= elemName
                                             select(name=`sel-${elemName}`, id=`sel-${elemName}`).form-select.form-select-sm
                                                 option(value='equal') is exacly
-                                                option(value='before_with') before with
+                                                option(value='begin_with') begin with
+                                                option(value='not_begin_with') begin with
                                                 option(value='end_with') end with
+                                                option(value='not_end_with') not end with
                                                 option(value='constain') constain
                                                 option(value='not_contain') not constain
                                                 option(value='is_one_of') is one of
@@ -50,10 +55,10 @@ block content
                                         div.col
                                             label.form-label(for=`${elemName}`)= elemName
                                             select(name=`sel-${elemName}`, id=`sel-${elemName}`).form-select.form-select-sm
-                                                option(value='equal') is exacly
+                                                option(value='date_equal') is exacly
                                                 option(value='before') before...
                                                 option(value='after') after...
-                                                option(value='between') between
+                                                option(value='date_between') between
                                             input(type="datetime-local", name=`${elemName}`, id=`${elemName}`).form-control.form-control-sm
                         div.row.mb-3
                             div.col.d-flex.justify-content-center
@@ -81,15 +86,30 @@ block custom-script
             $('input[type=reset]').click(function () {
                 window.location.reload();
             });
+            $('select[name^="sel-"]').change(function () {
+                let objInput = $(this).attr('id').replace('sel-', '');
+                if($(this).find('option:selected').val() == 'between' || $(this).find('option:selected').val() == 'date_between') {
+                    $(`input[name='${objInput}']`).after(`<input type='${$(`input[name='${objInput}']`).attr('type')}' name='${objInput}2' id='${objInput}2' class='form-control form-control-sm'/>`);
+                } else {
+                    $(`input[name='${objInput}2']`).remove();
+                }
+            });
             $('form').submit(function (e) {
                 e.preventDefault();
                 let data = {};
-                for (let i = 0;i < $(this).find('input:not(.btn)').length;i++) {
-                    let id = $($(this).find('input:not(.btn)')[i]).attr('id');
+                for (let i = 0;i < $(this).find('input:not(.btn):not([name$="2"])').length;i++) {
+                    let id = $($(this).find('input:not(.btn):not([name$="2"])[name]')[i]).attr('id');
                     let option = $($(this).find('select[name^="sel-"]')[i]).find('option:selected').val();
-                    let val = $($(this).find('input:not(.btn)')[i]).val();
-                    data[`${id}`] = {"value": val, "option": option};
+                    let val = $($(this).find('input:not(.btn):not([name$="2"])')[i]).val();
+                    if (option == 'between'||option == 'date_between') {
+                        data[`${id}`] = {"value": [val], "option": option};
+                        let asst_val = $(`input[id='${id}2']`).val();
+                        data[`${id}`].value.push(asst_val)
+                    } else {
+                        data[`${id}`] = {"value": val, "option": option};
+                    }
                 }
+                console.log(data);
 
                 postData($(this).attr('action'), data)
                 .then(async (res) => {

@@ -77,8 +77,8 @@ router.post('/getTransaction/filter', async function (req, res) {
         }
     }
 
+    console.log(await dept.toString());
     let dp = await dept.get(false);
-    console.log(dp.toString());
 
     let resdata = await dept.get();
     res.json(resdata);
