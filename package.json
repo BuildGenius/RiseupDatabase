@@ -26,6 +26,7 @@
     "mssql": "^8.1.2",
     "mysql": "^2.18.1",
     "node-cron": "^3.0.2",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "rand-token": "^1.0.1"
   }
 }

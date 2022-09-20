@@ -37,7 +37,6 @@ router.post('/update', async function (req, res) {
 });
 
 router.post('/getAuth', function (req, res) {
-  console.log(req.session);
   if (req.session.userid !== null) {
     res.json({status: true, redirectto: '/'});
   }
