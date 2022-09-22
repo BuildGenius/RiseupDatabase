@@ -43,6 +43,13 @@ class USERMETA extends Database {
 
         return date;
     }
+
+    async get_userProfile_by_token (token) {
+        await this.Connect(this.config);
+        let data = await this.conn.query(`EXEC GET_USERPROFILE_BY_TOKEN @token = '${token}'`);
+
+        return data;
+    }
 }
 
 module.exports = USERMETA;

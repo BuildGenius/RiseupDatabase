@@ -6,7 +6,7 @@ var config_min = require('../configuration.json')["min-project"];
 var line = require('../bin/lib/linesFunction/Line');
 var ReceiptDeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
 const USERS = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERS");
-// const USERMETA = require();
+const USERMETA = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA");
 // const { Line } = require("messaging-api-line");
 var lineClient = new line({
     "DP": async (messageText) => {
@@ -107,9 +107,13 @@ router.post('/lineCall', async (req, res) => {
     res.json(response);
 });
 
-router.post('/users/get_userinfobyToken', function (req, res) {
-    let user = new USERS(config_min);
-    let usermeta = new USERMETA();
+router.post('/users/get_userinfobyToken', async function (req, res) {
+    console.log(req.body);
+    let usermeta = new USERMETA(config_min);
+    let response = await usermeta.get_userProfile_by_token(req.body.token);
+    console.log(response);
+
+    res.json(response);
 })
 
 module.exports = router;
