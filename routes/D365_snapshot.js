@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const config = require('../configuration.json')['D365_snapshot'];
+const config = require('../configuration.json')['D365_20220831'];
 const schema = require('../bin/lib/sqlClass/sqlSchema');
 const onhand = require('../bin/lib/sqlClass/192.168.43.84-D365/BPC_INVENTONHAND');
 const inventDim = require('../bin/lib/sqlClass/192.168.43.84-D365/INVENTDIM');
 const inventSum = require('../bin/lib/sqlClass/192.168.43.84-D365/INVENTSUM');
 const inventTrans = require('../bin/lib/sqlClass/192.168.43.84-D365/INVENTTRANS');
+const CUSTINVOICEJOUR = require('../bin/lib/sqlClass/192.168.43.84-D365_20220831/CUSTINVOICEJOUR');
 
 router.get('/BPC_INVENTONHAND', async (req, res) => {
     let scm = new schema(config);
@@ -37,5 +38,12 @@ router.get('/INVENTTRANS', async (req, res) => {
 
     res.render('table', {"title": "Inventory Transaction", column: invtrns.column, data: data });
 });
+
+router.get('/CUSTINVOICEJOUR', async (req, res) => {
+    let invoicejounal = new CUSTINVOICEJOUR(config);
+    let data = await invoicejounal.select(invoicejounal.column).get();
+
+    res.render('table', {title: 'CusTrans', column: Object.keys(data[0]), filterColumn: invoicejounal.column, data: data, active: 'CusInvoiceJour'});
+})
 
 module.exports = router;

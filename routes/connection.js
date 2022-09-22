@@ -40,14 +40,12 @@ router.get('/MIS_DataCenter', async function (req, res) {
 router.get('/D365_snapshot', async function (req, res) {
     let tables;
     let alltbale;
-    const schema = new sqlSchema(config['D365_snapshot']);
-    // await schema.syncSchema();
+    const schema = new sqlSchema(config['D365_20220831']);
+    // await schema.syncSchema('CUSTINVOICEJOUR');
     tables = await schema.select("TABLES").get();
 
     alltbale = tables.recordset;
     res.render('index', {title : "D365_snapshot", Alltable: alltbale, active: "D365_snapshot"});
 });
-
-
 
 module.exports = router;

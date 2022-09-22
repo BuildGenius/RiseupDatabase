@@ -2,8 +2,11 @@ var express = require("express");
 var router = express.Router();
 var authRouter = require('./auth');
 var config = require('../configuration.json').ITECToAX_REP;
+var config_min = require('../configuration.json')["min-project"];
 var line = require('../bin/lib/linesFunction/Line');
 var ReceiptDeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
+const USERS = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERS");
+// const USERMETA = require();
 // const { Line } = require("messaging-api-line");
 var lineClient = new line({
     "DP": async (messageText) => {
@@ -103,5 +106,10 @@ router.post('/lineCall', async (req, res) => {
 
     res.json(response);
 });
+
+router.post('/users/get_userinfobyToken', function (req, res) {
+    let user = new USERS(config_min);
+    let usermeta = new USERMETA();
+})
 
 module.exports = router;

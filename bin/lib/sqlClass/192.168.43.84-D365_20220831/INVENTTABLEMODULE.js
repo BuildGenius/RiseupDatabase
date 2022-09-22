@@ -1,0 +1,13 @@
+const Database = require('../Database');
+
+class INVENTTABLEMODULE extends Database {
+    constructor(configuration) {
+        super(configuration);
+        this.table = 'INVENTTABLEMODULE';
+        this.column = {
+            "ALLOCATEMARKUP": {"dataType": "int", "maxLength":"null"},"ENDDISC": {"dataType": "int", "maxLength":"null"},"INTERCOMPANYBLOCKED": {"dataType": "int", "maxLength":"null"},"ITEMID": {"dataType": "nvarchar", "maxLength":"20"},"LINEDISC": {"dataType": "nvarchar", "maxLength":"10"},"MARKUP": {"dataType": "numeric", "maxLength":"null"},"MARKUPGROUPID": {"dataType": "nvarchar", "maxLength":"10"},"MARKUPSECCUR_RU": {"dataType": "numeric", "maxLength":"null"},"MAXIMUMRETAILPRICE_IN": {"dataType": "numeric", "maxLength":"null"},"MODULETYPE": {"dataType": "int", "maxLength":"null"},"MULTILINEDISC": {"dataType": "nvarchar", "maxLength":"10"},"OVERDELIVERYPCT": {"dataType": "numeric", "maxLength":"null"},"PDSPRICINGPRECISION": {"dataType": "int", "maxLength":"null"},"PRICE": {"dataType": "numeric", "maxLength":"null"},"PRICEDATE": {"dataType": "datetime", "maxLength":"null"},"PRICEQTY": {"dataType": "numeric", "maxLength":"null"},"PRICESECCUR_RU": {"dataType": "numeric", "maxLength":"null"},"PRICEUNIT": {"dataType": "numeric", "maxLength":"null"},"SUPPITEMGROUPID": {"dataType": "nvarchar", "maxLength":"10"},"TAXITEMGROUPID": {"dataType": "nvarchar", "maxLength":"10"},"TAXWITHHOLDCALCULATE_TH": {"dataType": "int", "maxLength":"null"},"TAXWITHHOLDITEMGROUPHEADING_TH": {"dataType": "bigint", "maxLength":"null"},"UNDERDELIVERYPCT": {"dataType": "numeric", "maxLength":"null"},"UNITID": {"dataType": "nvarchar", "maxLength":"10"},"TAXGSTRELIEFCATEGORY_MY": {"dataType": "bigint", "maxLength":"null"},"DATAAREAID": {"dataType": "nvarchar", "maxLength":"4"},"PARTITION": {"dataType": "bigint", "maxLength":"null"},"RECID": {"dataType": "bigint", "maxLength":"null"},"RECVERSION": {"dataType": "int", "maxLength":"null"},"MODIFIEDDATETIME": {"dataType": "datetime", "maxLength":"null"},"MODIFIEDBY": {"dataType": "nvarchar", "maxLength":"20"},"CREATEDDATETIME": {"dataType": "datetime", "maxLength":"null"},"CREATEDBY": {"dataType": "nvarchar", "maxLength":"20"},"RETAILINVENTORYAVAILABILITYBUFFER": {"dataType": "numeric", "maxLength":"null"},"RETAILINVENTORYAVAILABILITYLEVELPROFILE": {"dataType": "nvarchar", "maxLength":"10"},"BASEPRICEPURCHASE": {"dataType": "int", "maxLength":"null"}
+        };
+    }
+}
+
+module.exports = INVENTTABLEMODULE;
