@@ -9,6 +9,16 @@
             "trustServerCertificate": true
         }
     },
+    "ITECToAX_TEMP": {
+        "server": "43.254.133.155",
+        "user": "MISDEV",
+        "password":"0608H",
+        "database":"ITECToAX",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
+        }
+    },
     "MISExpress" : {
         "host": "localhost",
         "user": "root",
