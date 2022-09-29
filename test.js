@@ -1,61 +1,61 @@
-const cron = require('node-cron');
-var Database = require('./bin/lib/sqlClass/Database');
-var config = require('./configuration.json').ITECToAX_REP;
-var AuthenticationContext = require('adal-node').AuthenticationContext;
-var axios = require('axios').default;
-
-var authorityHostUrl = 'https://login.windows.net';
-var tenant = 'e70c048e-459f-48f1-98c2-1d31a45a2ca1'; // AAD Tenant name.
-var authorityUrl = authorityHostUrl + '/' + tenant;
-var applicationId = '0312818f-6364-497e-8405-1f622adca15b'; // Application Id of app registered under AAD.
-var clientSecret = '~.Y8Q~GXzWZDcUBPLzrV4k83zpaMx0CZ1FXKVcQ0'; // Secret generated for app. Read this environment variable.
-var resource = 'https://com7-dev3c0111afab8cb777devaos.axcloud.dynamics.com/'; // URI that identifies the resource for which the token is valid.
-
-var context = new AuthenticationContext(authorityUrl);
+var mssql = require('mssql');
+var config = require('./configuration.json')['min-project'];
+var message = require('./controllers/LineMessage/message');
+var credentials = require('./configuration-line.json').development;
+var disk = require('diskusage');
+var os = require('os');
 
 (async () => {
-    testtxt = 'test:';
-    let num = 1512;
-    let counterr = 0;
-    let countcplt = 0;
-    getAuthentication(function (accessToken) {
-        for (let i = 0;i < 1000;i++) {
-            var data = JSON.stringify({
-                "dimensiontype": "GroupCategory",
-                "value": `${num + i}`,
-                "description": `Test by postman min(${i})`
-            });
+  let query = `USE msdb ; 
+  DECLARE @now INT = FORMAT(GETDATE(), 'yyyyMMdd');
+  
+  DECLARE @job_history TABLE (
+      job_id NVARCHAR(250),
+      job_Name NVARCHAR(150),
+      run_status INT,
+      run_date INT,
+      run_time INT, 
+      run_duration INT,
+      operator_emailed NVARCHAR(150) NULL,
+      operator_netsend NVARCHAR(150) NULL,
+      operator_paged NVARCHAR(150) NULL,
+      retires_attempted INT,
+      [server] NVARCHAR(250)
+  )
+  
+  insert into @job_history (job_id, job_Name, run_status, run_date, run_time, run_duration, operator_emailed, operator_netsend, operator_paged, retires_attempted, [server])
+  EXEC dbo.sp_help_jobhistory  
+      @start_run_date = @now,
+      @run_status = 1
+  
+  insert into @job_history (job_id, job_Name, run_status, run_date, run_time, run_duration, operator_emailed, operator_netsend, operator_paged, retires_attempted, [server])
+  EXEC dbo.sp_help_jobhistory  
+      @start_run_date = @now,
+      @run_status = 0
+  
+  SELECT DISTINCT jobh.job_Name, 
+  CASE 
+      WHEN jobh.run_status = 0
+      THEN 'failed'
+      ELSE 'completed'
+  END [status]
+  FROM @job_history jobh
+  WHERE jobh.job_Name NOT LIKE 'sys%'
+  AND jobh.run_time = (SELECT max(run_time) FROM @job_history WHERE job_id = jobh.job_id)
+  ORDER BY [status] ASC`
+  let conn = await mssql.connect(config);
+  let response = await conn.query(query);
+  let resData = response.recordset;
+  
+  let str = 'Job Agent status.\r\n';
+  for (let i = 0;i < resData.length;i++) {
+      str += `${resData[i].status}! ${resData[i].job_Name}\r\n`
+  }
 
-            axios({
-                method: "POST",
-                url: resource + "api/Services/COM7_InterfaceServiceGroup/COM7_FinancialDimension/CreateFinancialDimentsion",
-                headers: {
-                    'Authorization': 'Bearer ' + accessToken, 
-                    'Content-Type': 'application/json'
-                },
-                data: data
-            }).then((response) => {
-                console.log(response);
-                if (response.data !== 'completed') {
-                    counterr++;
-                    console.log(`err round ${i}: ` + counterr);
-                } else {
-                    countcplt++;
-                    console.log(`completed round ${i}: ` + countcplt);
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-    });
+  let msg = new message({
+      accessToken: credentials.accessToken,
+      channelSecret: credentials.channelSecret
+  });
+
+  msg.sendText('Ua0c2a3546f00c92b931fe127b7d30220', str);
 })();
-
-function getAuthentication(callback){
-    context.acquireTokenWithClientCredentials(resource, applicationId, clientSecret, function(err, tokenResponse) {
-        if (err) {
-          console.log('well that didn\'t work: ' + err.stack);
-        } else {
-          callback(tokenResponse.accessToken);
-        }
-    });    
-}

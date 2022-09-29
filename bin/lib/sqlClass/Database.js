@@ -9,6 +9,9 @@ class Database {
         let datetime_dash = '-';
         this.SetConfig(configuration);
         this.statement = "";
+        this.return = true;
+        this.output = '';
+        this.Values;
         this.opearte = {
             "equal": {
                 "type": ['string', 'int', 'datetime', 'date'],
@@ -149,6 +152,52 @@ class Database {
     async toString() {
         return await this.get(false);
     }
+    insert(){
+        this.statementType = 'insert';
+        return this;
+    }
+    setReturn(returned = false) {
+        this.return = returned;
+        return this;
+    }
+    values(values){
+        if (this.statementType == 'insert') {
+            this.Values = values;
+        } else if (this.statementType == 'update') {
+
+        } else if (this.statementType == 'delete') {
+
+        }
+
+        return this;
+    }
+    async save() {
+        if (this.statementType == 'insert') {
+            this.output = 'OUTPUT inserted.*';
+            this.statement = `INSERT INTO [${this.config.database}].[dbo].[${this.table}] (${Object.keys(this.Values).join(', ')})\r\n${this.output}\r\nVALUES\r\n\t(`;
+            // this.statement += Object.values(this.Values).join('\r\n\t');
+
+            for (let i = 0;i < Object.values(this.Values).length;i++) {
+                this.statement += `'${Object.values(this.Values)[i]}'`;
+                
+                if (i < (Object.values(this.Values).length - 1)) {
+                    this.statement += `,\r\n\t`
+                }
+            }
+
+            this.statement += ')';
+        } else if (this.statementType == 'update') {
+            this.output = 'OUTPUT inserted.*, deleted.*';
+        } else if (this.statementType == 'delete') {
+            this.output = 'OUTPUT deleted.*';
+        }
+
+        await this.Connect(this.config);
+        let response = await this.conn.query(this.statement);
+        this.response = response;
+
+        return response.recordset;
+    }
     select(input = []){
         this.statementType = 'select';
         
@@ -165,15 +214,6 @@ class Database {
         }
 
         return this;
-    }
-    save(){
-
-    }
-    update(){
-
-    }
-    delete(){
-
     }
     setOffset() {
         if (this.page > 0) {

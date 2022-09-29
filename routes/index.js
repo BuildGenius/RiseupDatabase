@@ -10,17 +10,17 @@ const USERMETA = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA
 const index = require('../controllers').index;
 var axios = require('axios').default;
 var router = express.Router();
-const schema = new sql(config_min);
-
+const schema = new sql(config);
 const login = new lineLogin({
   channel_id: '1656660083',
   channel_secret: '17729285b1719d15e3a323c5e1c0d907',
-  callback_url: 'https://d7bd-183-88-63-114.ap.ngrok.io/callback',
+  callback_url: 'https://0c8e-183-88-99-68.ap.ngrok.io/callback',
   scope: "openid profile",
   prompt: "consent",
   bot_prompt: "normal"
 });
-
+var index = require('../controllers/index.controllers');
+const { response } = require('express');
 //line config
   const client = new LineClient({
     accessToken: "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
@@ -29,33 +29,22 @@ const login = new lineLogin({
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  req.sessionStore.all(async (err, sess) => {
-    if (err) throw err;
-    
-    if (Object.values(sess).length > 0) {
-      let expriresTime = await axios.get('https://api.line.me/oauth2/v2.1/verify?access_token=' + Object.values(sess)[0].lineTokenID)
-      .catch(err => {if (err) throw err})
-      req.session.cookie.expires = new Date(Date.now() + expriresTime.data.expires_in);
-      req.session.cookie.maxAge = expriresTime.data.expires_in;
+  let home = new index(req);
 
-      req.session.save();
-    } 
-    // else {
-    //   res.redirect('/Signin');
-    // }
-  })
-
-  let tables = [];
-  await schema.syncSchema();
-  await schema.select("TABLES").get().then(result => {
-    tables = result.recordset;
-  });
-
-  res.render('index', { 
-    title: 'SQL Express'
-    , Alltable: tables
-    , active: 'home'
-   });
+  if (home.redirectTo !== '') {
+    res.redirect(home.redirectTo);
+  } else {
+    let tables = [];
+    await schema.syncSchema();
+    await schema.select("TABLES").get().then(result => {
+      tables = result.recordset;
+    });
+    res.render('index', { 
+      title: home.title,
+      Alltable: tables,
+      active: home.active_menu
+    });
+  }
 });
 
 router.use('/Signin', login.auth());

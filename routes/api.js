@@ -7,6 +7,7 @@ var line = require('../bin/lib/linesFunction/Line');
 var ReceiptDeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
 const USERS = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERS");
 const USERMETA = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA");
+var apis = require("../controllers/apis.controllers");
 // const { Line } = require("messaging-api-line");
 var lineClient = new line({
     "DP": async (messageText) => {
@@ -114,6 +115,13 @@ router.post('/users/get_userinfobyToken', async function (req, res) {
     console.log(response);
 
     res.json(response);
-})
+});
+
+router.use('/store_disk_log/:serverName?', async (req, res) => {
+    let api = new apis(req);
+    let response = await api.Store_diskspaces();
+
+    res.json(response);
+});
 
 module.exports = router;

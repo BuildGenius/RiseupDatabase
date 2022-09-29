@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cron = require('node-cron');
+var autobot = require('./controllers/autobot.controllers');
 // var session = require('cookie-session');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -48,6 +49,12 @@ app.use('/connection/tempserver', tempserverRouter);
 app.use('/connection/SS20220901', SSRouter);
 app.use('/connection/D365_snapshot', D365_snapshot);
 app.use('/api', apiRouter);
+
+// cron.schedule('* * * * * *', async function () {
+  // let abot = new autobot();
+  // let str = await abot.chk_both_data_of_TempandRep();
+  // console.log(str);
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
