@@ -25,10 +25,10 @@ router.get('/changeStatusTransfer', async function (req, res) {
     let d = new Date;
     let currentDate = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() - 1}`;
     let dept = new rvdeposit(config);
-    console.log(dept.column);
     let data = await dept.select().where("CAST(CrTime as date)", currentDate).desc("TransactionID").get();
+    console.log(data);
 
-    res.render('cng_st_function', {title: 'Change Status Transfer', column: Object.keys(data[0]), filterColumn: dept.column, data: data, active: 'changeStatusTransfer'});
+    res.render('cng_st_function', {title: 'Change Status Transfer', active: 'changeStatusTransfer'});
 });
 
 router.post('/changeStatusTransfer/exec', async function (req, res) {
@@ -59,9 +59,12 @@ router.post('/changeStatusTransfer/exec', async function (req, res) {
                 OUTPUT inserted.SIID, inserted.SIBranch
                 WHERE SOBranch <> 4 AND CAST(CrTime as date) = @CreateAt
             END
-        `);
-
-        res.json({'status': 'Completed', 'Affect': result.recordset.length});
+        `).then(result => {
+            res.json({'status': 'Completed', 'Affect': result.recordset.length});
+        })
+        .catch(err => {
+            res.json({'status': 'failed', 'error': err.originalError.info.message});
+        });
     })
     .catch(err => {console.log(err)});
 });

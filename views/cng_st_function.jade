@@ -20,7 +20,7 @@ block content
                 div.alert.alert-danger.d-flex.align-items-center.d-none(role="alert")
                     svg.bi.flex-shrink-0.me-2(width="24",height="24",role="img",aria-lebel="Danger:")
                         use(xlink:href="#exclamation-triangle-fill")
-                    div#danger-response-text
+                    div#failed-response-text
             div.row.mb-3
                 div.col
                     label.form-label Target Date
@@ -133,6 +133,13 @@ block content
                     setInterval(function () {
                         $('div.alert.alert-success').addClass('d-none');
                     }, 10000);
+                } else {
+                    $('div#failed-response-text').text(`failed! ${res.error}`);
+                    $('div.alert.alert-danger').removeClass('d-none');
+
+                    setInterval(function () {
+                        $('div.alert.alert-danger').addClass('d-none');
+                    }, 10000);
                 }
-            });
+            }); 
             });
