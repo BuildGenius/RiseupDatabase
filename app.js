@@ -14,6 +14,7 @@ var SSRouter = require('./routes/SS20220901');
 var D365_snapshot = require('./routes/D365_snapshot');
 var FunctionRouter = require('./routes/functions');
 var apiRouter = require('./routes/api');
+
 var session_options = {
   secret: '17729285b1719d15e3a323c5e1c0d907',
   resave: false,
@@ -38,16 +39,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// function genCode(length) {
-//   var result           = '';
-//   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//   var charactersLength = characters.length;
-//   for ( var i = 0; i < length; i++ ) {
-//     result += characters.charAt(Math.floor(Math.random() * 
-// charactersLength));
-//  }
-//  return result;
-// }
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -6,6 +6,10 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www"
   },
+  "workspaces": [
+    "./controllers/*",
+    "./models/*"
+  ],
   "dependencies": {
     "@line/bot-sdk": "^7.5.0",
     "adal-node": "^0.2.1",

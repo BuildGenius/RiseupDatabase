@@ -84,5 +84,13 @@
             "encrypt": false,
             "trustServerCertificate": true
         }
+    },
+    "lineApis": {
+        "production": {
+
+        },
+        "development": {
+            
+        }
     }
 }

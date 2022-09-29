@@ -7,10 +7,10 @@ var config_min = require('../configuration.json')['min-project'];
 var lineLogin = require('line-login');
 var { LineClient } = require('messaging-api-line');
 const USERMETA = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA');
+const index = require('../controllers').index;
 var axios = require('axios').default;
 var router = express.Router();
-
-const schema = new sql(config);
+const schema = new sql(config_min);
 
 const login = new lineLogin({
   channel_id: '1656660083',
@@ -22,10 +22,10 @@ const login = new lineLogin({
 });
 
 //line config
-const client = new LineClient({
-  accessToken: "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
-  channelSecret: "104a6fa81b58e4eb79ecc51fc0dd0230"
-});
+  const client = new LineClient({
+    accessToken: "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
+    channelSecret: "104a6fa81b58e4eb79ecc51fc0dd0230"
+  });
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -92,7 +92,6 @@ router.use('/callback', login.callback(async (req, res, next, token_response) =>
     req.session.fullname = data.fullname;
 
     req.session.save();
-    console.log(req.session);
 
     res.redirect(`/`);
   }
