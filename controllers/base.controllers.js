@@ -1,12 +1,13 @@
 class base {
     constructor (req) {
         this.Data = req.body;
-        this.Query = req.query;
+        this.Query = req.params;
         this.Session = req.session;
 
         this.title = "";
         this.active_menu = "";
         this.response = {};
+        this.redirectTo = '';
 
         this.setResponse('title', this.title);
         this.setResponse('active', this.active_menu);
@@ -26,8 +27,8 @@ class base {
         }
     }
     session(name = 'all') {
-        if (name = 'all') {
-            return this.Session[name]
+        if (name !== 'all') {
+            return this.Session[name];
         } else {
             return this.Session;
         }
@@ -36,6 +37,19 @@ class base {
         this.response[key] = value;
 
         return this;
+    }
+    authorized(force = true) {
+        let login = true;
+        if (force) {
+            if (this.session('lineID') == undefined) {
+                login = false;
+                this.redirectTo = '/Signin';
+            } else {
+                this.redirectTo = '';
+            }
+        }
+
+        return login ? {status: true}:{status: false, redirectTo: this.redirectTo};
     }
 }
 

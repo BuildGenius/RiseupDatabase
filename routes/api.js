@@ -117,8 +117,11 @@ router.post('/users/get_userinfobyToken', async function (req, res) {
     res.json(response);
 });
 
-router.use('/store_disk_log', async (req, res) => {
-    
+router.use('/store_disk_log/:serverName?', async (req, res) => {
+    let api = new apis(req);
+    let response = await api.Store_diskspaces();
+
+    res.json(response);
 });
 
 module.exports = router;

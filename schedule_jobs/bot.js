@@ -16,9 +16,9 @@ cron.schedule('1 1 9 * * * *', async () => {
     msg.sendText(credentials.production['interface ItectoAx'], str);    
 });
 
-cron.schedule('0 1 11 * * * *', async () => {
+cron.schedule('1 30 9 * * * *', async () => {
 let query = `USE msdb ; 
-    DECLARE @now INT = FORMAT(GETDATE(), 'yyyyMMdd');
+    DECLARE @now INT = FORMAT(DATEADD(DAY, -1, GETDATE()), 'yyyyMMdd');
     
     DECLARE @job_history TABLE (
         job_id NVARCHAR(250),
