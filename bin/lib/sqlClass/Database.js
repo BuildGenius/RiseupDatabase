@@ -516,12 +516,13 @@ class Database {
 
         switch (this.orderType) {
             case "desc" :
-                this.statement += `\r\nORDER BY\r\n\t${this.order.join(',')}\r\nDESC`
+                this.statement += `\r\nORDER BY\r\n\t[${this.order.join(',')}]\r\nDESC`
             break;
             case "asc" : 
-                this.statement += `\r\nORDER BY\r\n\t${this.order.join(',')}\r\nASC`
+                this.statement += `\r\nORDER BY\r\n\t[${this.order.join(',')}]\r\nASC`
+            break;
             default:
-                this.statement += `\r\nORDER BY\r\n\t${Object.keys(this.column)[0]}\r\nASC`
+                this.statement += `\r\nORDER BY\r\n\t[${Object.keys(this.column)[0]}]\r\nASC`
             break;
         }
 

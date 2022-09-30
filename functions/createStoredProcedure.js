@@ -1,14 +1,14 @@
 var sql = require('mssql');
 var fs = require('fs');
 const e = require('express');
-var config_itec_rep = require('./configuration.json').ITECToAX_REP;
+var config_itec_rep = require('../configuration.json').DIY_ITEC;
 var config_min = require('./configuration.json')['min-project'];
 
 (async () => {
     sql.connect(config_itec_rep)
     .then(async (conn) => {
         let result = await conn.query(`SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES 
-        WHERE TABLE_CATALOG = 'ITECToAX_REP' 
+        WHERE TABLE_CATALOG = 'ITECToAX' 
         AND TABLE_SCHEMA = 'dbo' 
         AND TABLE_TYPE = 'BASE TABLE'`);
 
@@ -20,7 +20,7 @@ var config_min = require('./configuration.json')['min-project'];
             let infoTableColumns = await conn.query(`
             SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH 
             FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_CATALOG = 'ITECToAX_REP' 
+            WHERE TABLE_CATALOG = 'ITECToAX' 
             AND TABLE_SCHEMA = 'dbo' 
             AND TABLE_NAME = '${result.recordset[i]['TABLE_NAME']}'`);
 

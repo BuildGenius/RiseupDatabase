@@ -41,7 +41,7 @@ router.post('/changeStatusTransfer/exec', async function (req, res) {
         
         IF @OtherBranch = 'YES'
             BEGIN
-                UPDATE [ITECToAX_REP].[dbo].[SI]
+                UPDATE [ITECToAX].[dbo].[SI]
                 SET
                     BPC_status = NULL,
                     BPC_Remark = NULL,
@@ -51,7 +51,7 @@ router.post('/changeStatusTransfer/exec', async function (req, res) {
             END
         ELSE
             BEGIN
-                UPDATE [ITECToAX_REP].[dbo].[SI]
+                UPDATE [ITECToAX].[dbo].[SI]
                 SET
                     BPC_status = '86',
                     BPC_Remark = '___waiting___',

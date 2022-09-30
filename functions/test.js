@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 var Database = require('./bin/lib/sqlClass/Database');
-var config = require('./configuration.json').ITECToAX_REP;
+var config = require('../configuration.json').DIY_ITEC;
 var AuthenticationContext = require('adal-node').AuthenticationContext;
 var axios = require('axios').default;
 

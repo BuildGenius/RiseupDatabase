@@ -5,7 +5,7 @@ class DerivedDimension extends Database {
         super(configuration);
         this.table = 'DerivedDimension';
         this.column = {
-            "SubCategoryID": {"dataType": "nvarchar", "maxLength":"10"},"CategoryID": {"dataType": "nvarchar", "maxLength":"10"},"GroupCategory": {"dataType": "nvarchar", "maxLength":"10"},"CreateAt": {"dataType": "datetime", "maxLength":"null"},"UpdateAt": {"dataType": "datetime", "maxLength":"null"}
+            "SubCateogryID": {"dataType": "int", "maxLength":"null"},"CategoryID": {"dataType": "int", "maxLength":"null"},"GroupCategory": {"dataType": "int", "maxLength":"null"}
         };
     }
 }

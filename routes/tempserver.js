@@ -1,18 +1,22 @@
 var express = require('express');
 var router = express.Router();
-const config = require('../configuration.json').ITECToAX_REP;
+const config = require('../configuration.json').DIY_ITEC;
 var Buy = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/Buy');
 const Invoice = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/Invoice');
 const Deposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/Deposit');
 const SI = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/SI');
 const InventoryInOut = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/InventoryInOut');
 
-router.get('/Buy', async function (req, res) {
+router.get('/Buy/:page?', async function (req, res) {
     let buy = new Buy(config);
-    let data = await buy.select().desc('TransactionID').get();
-    let defaultCommand = buy.select(buy.column).desc('TransactionID').toString();
+    buy.setLimit(500);
+    buy.page = req.params.page == undefined ? 0:(req.params.page - 1);
+    let data = await buy.select(`row_number() OVER(Order by BuyID) [#]`, 'BuyID', 'BuyBranch', 'Product', 'Serial', 'Number', 'POID', 'POBranch', 'SupCode', 'DocRef', 'InvoiceDate')
+    .desc('[#]')
+    .get();
+    // let defaultCommand = buy.select(buy.column).desc('TransactionID').toString();
 
-    res.render('table', {"title": "Buy", column: buy.column, column: Object.keys(data[0]), data: data });
+    res.render('table', {"title": "Buy", filterColumn: buy.column, column: Object.keys(data[0]), data: data });
 });
 
 router.get('/Invoice', async function (req, res) {
