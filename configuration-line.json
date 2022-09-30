@@ -1,12 +1,32 @@
 {
-    "development": {
-        "accessToken": "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
-        "channelSecret": "104a6fa81b58e4eb79ecc51fc0dd0230",
-        "test-user": "Ua0c2a3546f00c92b931fe127b7d30220"
+    "line-message": {
+        "development": {
+            "accessToken": "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
+            "channelSecret": "104a6fa81b58e4eb79ecc51fc0dd0230",
+            "test-user": "Ua0c2a3546f00c92b931fe127b7d30220"
+        },
+        "production": {
+            "accessToken": "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
+            "channelSecret": "104a6fa81b58e4eb79ecc51fc0dd0230",
+            "interface ItectoAx": "C263fcbe5b17b321b113bffa15af10dc6"
+        }
     },
-    "production": {
-        "accessToken": "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
-        "channelSecret": "104a6fa81b58e4eb79ecc51fc0dd0230",
-        "interface ItectoAx": "C263fcbe5b17b321b113bffa15af10dc6"
+    "line-login": {
+        "development": {
+            "channel_id": "1657420586",
+            "channel_secret": "fce5f4bb082f0e066704a56b6d48c1b4",
+            "callback_url": "https://3ac4-110-170-68-130.ap.ngrok.io/callback",
+            "scope": "openid profile",
+            "prompt": "consent",
+            "bot_prompt": "normal"
+        },
+        "production": {
+            "channel_id": "1656660083",
+            "channel_secret": "17729285b1719d15e3a323c5e1c0d907",
+            "callback_url": "https://0c8e-183-88-99-68.ap.ngrok.io/callback",
+            "scope": "openid profile",
+            "prompt": "consent",
+            "bot_prompt": "normal"
+        }
     }
 }

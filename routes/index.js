@@ -4,36 +4,29 @@ const User = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERS');
 var sql = require('../bin/lib/sqlClass/sqlSchema');
 var config = require('../configuration.json').ITECToAX_REP;
 var config_min = require('../configuration.json')['min-project'];
+var credentials_line_login = require('../configuration-line.json')['line-login'].development;
+var credentials_line_message = require('../configuration-line.json')['line-message'].development;
 var lineLogin = require('line-login');
 var { LineClient } = require('messaging-api-line');
 const USERMETA = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA');
-const index = require('../controllers').index;
 var axios = require('axios').default;
 var router = express.Router();
 const schema = new sql(config);
-const login = new lineLogin({
-  channel_id: '1656660083',
-  channel_secret: '17729285b1719d15e3a323c5e1c0d907',
-  callback_url: 'https://0c8e-183-88-99-68.ap.ngrok.io/callback',
-  scope: "openid profile",
-  prompt: "consent",
-  bot_prompt: "normal"
-});
+const login = new lineLogin(credentials_line_login);
 var index = require('../controllers/index.controllers');
 const { response } = require('express');
-//line config
-  const client = new LineClient({
-    accessToken: "fDlox1shrxTaCZJnFaNl55aVNDh/M1fxAL59kJ/a3ZI3ATi5EU1fu5jKJvLRQMGB0ffLFAzhQ6uOY7Jqy2MprwtWXr7pCbJ7fTfeuZ9CNHG/nHz+4RwyfccMyXeI8gas2XJSmoEK0DE9NGC5paKeZwdB04t89/1O/w1cDnyilFU=",
-    channelSecret: "104a6fa81b58e4eb79ecc51fc0dd0230"
-  });
+const client = new LineClient(credentials_line_message);
+const disk = require('../models/diskspace');
+const performance = require('../controllers/performances/diskspaces');
+
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   let home = new index(req);
 
-  if (home.redirectTo !== '') {
-    res.redirect(home.redirectTo);
-  } else {
+  // if (home.redirectTo !== '') {
+  //   res.redirect(home.redirectTo);
+  // } else {
     let tables = [];
     await schema.syncSchema();
     await schema.select("TABLES").get().then(result => {
@@ -44,11 +37,10 @@ router.get('/', async function(req, res, next) {
       Alltable: tables,
       active: home.active_menu
     });
-  }
+  // }
 });
 
 router.use('/Signin', login.auth());
-
 router.use('/callback', login.callback(async (req, res, next, token_response) => {
   /**
    * role number
@@ -160,5 +152,31 @@ router.post('/webhook', async function (req, res) {
 
     res.json({});
 });
+
+router.post('/availablediskspcs/:serverName?', async function (req, res) {
+    let dsk = new disk();
+    let pmance = new performance;
+    let availSpace = await dsk.getAvailableSpace(req.params.serverName);
+    let totalSpace = await dsk.getTotalSpace(req.params.serverName);
+    let dailyDataSize = await dsk.getdailyDataSize(req.params.serverName);
+
+    let availableGb = pmance.converse(availSpace[0]['available disk space'], req.body['require-unit']);
+    let totaldiskGb = pmance.converse(totalSpace[0]['total disk space'], req.body['require-unit']);
+    let availableMb = pmance.converse(availSpace[0]['available disk space'], 'Megabytes');
+    let incrementalMb = pmance.converse(dailyDataSize[0]['avgdatasize'], 'Megabytes');
+    let availableDay = Math.floor(availableMb / incrementalMb);
+
+    if (availableDay < 30) {
+      availableDay = Math.floor(availableDay/7) + ' Weeks';
+    } else if (availableDay < 365) {
+      availableDay = Math.floor(availableDay/30) + ' Months';
+    } else if (availableDay > 365) {
+      availableDay = Math.floor(availableDay/365) + ' Years';
+    } else {
+      availableDay += ' Days'
+    }
+
+    res.json({'available': availableGb, 'total': totaldiskGb, 'avgIncrementPerDay': incrementalMb, 'availableDay': availableDay});
+})
 
 module.exports = router;

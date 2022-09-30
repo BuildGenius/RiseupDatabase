@@ -26,6 +26,19 @@ block content
                 th Register time
                 th Approve
             tbody.table-striped.table-hover
+        div.temp-server
+          h3 available disk space
+          h4 Temp server
+          div.temp-srv.progress(style="height: 20px;")
+            div.temp-srv.progress-bar.progress-bar-striped.bg-success(role="progressbar", style="width: 25%;", aria-valuenow="25", aria-valuemin="0", aria-valuemax="100") 25%
+            div.temp-srv.progress-bar.bg-light.text-dark(role="progressbar", style="width: 25%;", aria-valuenow="25", aria-valuemin="0", aria-valuemax="100") 25%
+          p.text-muted.text-end.temp-srv.total-diskspace total disk spaces 189 Gb free space available for 10 years
+          hr
+          h4 Lovely Cat server
+          div.luvly-cat-srv.progress(style="height: 20px;")
+            div.luvly-cat-srv.progress-bar.progress-bar-striped.bg-success(role="progressbar", style="width: 25%;", aria-valuenow="25", aria-valuemin="0", aria-valuemax="100") 25%
+            div.luvly-cat-srv.progress-bar.bg-light.text-dark(role="progressbar", style="width: 25%;", aria-valuenow="25", aria-valuemin="0", aria-valuemax="100") 25%
+          p.text-muted.text-end.luvly-cat-srv.total-diskspace total disk spaces 189 Gb free space available for 10 years
   script.
     // Example POST method implementation:
     async function postData(url = '', data = {}) {
@@ -67,7 +80,10 @@ block content
       $('div.registed-user').ready(async function () {
         let html = "";
         let data = await postData('/users/getRegistedUser', {});
-       
+        
+        if (data.length == 0) {
+          $('div.registed-user').addClass('d-none');
+        }
         for (let i = 0 ;i < data.length;i++) {
           let d = new Date(data[i].CreateAt);
           let strTime = `${('0' + d.getDate()).slice(-2)}/${('0' + (d.getMonth() + 1)).split(-2)}/${d.getFullYear()} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}:${('0' + d.getSeconds()).slice(-2)}`;
@@ -92,6 +108,26 @@ block content
         $('table tbody').after(html);
         WaitForButtonClick();
       });
+      $('div.temp-server').ready(async function () {
+        let data = await postData('/availablediskspcs/temp_server', {"require-unit": 'Gigabytes'});
+        let usage = data.total - data.available;
+        let percent_use = ((usage / data.total) * 100).toFixed(2);
+        let percent_ava = ((data.available / data.total) * 100).toFixed(2);
+        
+        $('div.temp-srv.progress-bar.bg-success').css('width', `${percent_use}%`).attr('aria-valuenow', usage).text(usage + ` Gb(${percent_use}%)`);
+        $('div.temp-srv.progress-bar:not(.bg-success)').css('width', `${percent_ava}%`).attr('aria-valuenow', data.available).text(data.available + ` Gb(${percent_ava}%)`);
+        $('p.temp-srv.total-diskspace').text(`total disk spaces ${data.total} Gb and data explanded ${data.avgIncrementPerDay} Mb per day. free space available for ${data.availableDay}`);
+      })
+      $('div.luvly-cat-srv').ready(async function () {
+        let data = await postData('/availablediskspcs/lovelycat', {"require-unit": 'Gigabytes'});
+        let usage = data.total - data.available;
+        let percent_use = ((usage / data.total) * 100).toFixed(2);
+        let percent_ava = ((data.available / data.total) * 100).toFixed(2);
+        
+        $('div.luvly-cat-srv.progress-bar.bg-success').css('width', `${percent_use}%`).attr('aria-valuenow', usage).text((usage).toFixed(2) + ` Gb(${percent_use}%)`);
+        $('div.luvly-cat-srv.progress-bar:not(.bg-success)').css('width', `${percent_ava}%`).attr('aria-valuenow', data.available).text(data.available + ` Gb(${percent_ava}%)`);
+        $('p.luvly-cat-srv.total-diskspace').text(`total disk spaces ${data.total} Gb and data explanded ${data.avgIncrementPerDay} Mb per day. free space available for ${data.availableDay}`);
+      })
       $('input[type=text]#find-button').keyup(function () {
         let btnes = $('button.btn-block');
 
