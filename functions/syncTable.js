@@ -4,5 +4,5 @@ const config_test = require('../configuration.json');
 
 (async () => {
     let schema = new syncSchema(config);
-    await schema.syncSchema('diskspace_log');
+    await schema.syncSchema('SubCategory');
 })();

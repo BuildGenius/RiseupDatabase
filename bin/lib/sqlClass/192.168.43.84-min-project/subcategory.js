@@ -1,13 +1,13 @@
 const Database = require('../Database');
 
-class subcategory extends Database {
+class SubCategory extends Database {
     constructor(configuration) {
         super(configuration);
-        this.table = 'subcategory';
+        this.table = 'SubCategory';
         this.column = {
-            "Dimension value": {"dataType": "nvarchar", "maxLength":"255"},"Description": {"dataType": "nvarchar", "maxLength":"255"}
+            "ID": {"dataType": "int", "maxLength":"null"},"SubCategoryName": {"dataType": "nvarchar", "maxLength":"100"},"Category": {"dataType": "nvarchar", "maxLength":"100"}
         };
     }
 }
 
-module.exports = subcategory;
+module.exports = SubCategory;

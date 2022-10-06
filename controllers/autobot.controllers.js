@@ -8,7 +8,7 @@ class autobot {
         return new autobot;
     }
     async chk_number_of_repData() {
-        let conn = await mssql.connect(config.ITECToAX_REP);
+        let conn = await mssql.connect(config.DIY_ITEC);
         let querytxt = `SELECT * FROM (
             SELECT 'Master Bank' [Key], COUNT(*) numberOfdata FROM Bank
             WHERE CAST(Bank.CrTime as date) = CAST(DATEADD(DAY, -1, GETDATE()) as date)

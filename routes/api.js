@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var authRouter = require('./auth');
-var config = require('../configuration.json').ITECToAX_REP;
+var config = require('../configuration.json').DIY_ITEC;
 var config_min = require('../configuration.json')["min-project"];
 var line = require('../bin/lib/linesFunction/Line');
 var ReceiptDeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/ReceiptDeposit');
@@ -18,8 +18,8 @@ var lineClient = new line({
         var rv = new ReceiptDeposit(config);
         await rv.Connect(config);
 
-        var result = await rv.conn.query(`SELECT rd.TransactionID FROM ITECToAX_REP.dbo.ReceiptDeposit rd 
-        LEFT JOIN ITECToAX_REP.dbo.Deposit d ON d.DepositID = rd.DepositID 
+        var result = await rv.conn.query(`SELECT rd.TransactionID FROM ITECToAX.dbo.ReceiptDeposit rd 
+        LEFT JOIN ITECToAX.dbo.Deposit d ON d.DepositID = rd.DepositID 
         AND d.DepositBranch = rd.DepositBranch 
         AND d.TransactionID = rd.TransactionID 
         WHERE d.DepositID = '${id}' AND d.DepositBranch = '${branch}' 

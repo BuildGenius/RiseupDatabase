@@ -6,8 +6,8 @@ const config = require('../configuration.json');
 router.get('/tempServer', async function (req, res) {
     let tables;
     let alltbale;
-    const schema = new sqlSchema(config.ITECToAX_REP);
-    // await schema.syncSchema();
+    const schema = new sqlSchema(config.DIY_ITEC);
+    await schema.syncSchema();
     tables = await schema.select("TABLES").get();
 
     alltbale = tables.recordset;
