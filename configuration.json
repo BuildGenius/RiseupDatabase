@@ -95,12 +95,15 @@
             "trustServerCertificate": true
         }
     },
-    "lineApis": {
-        "production": {
-
-        },
-        "development": {
-            
+    "DATA_RAW": {
+        "server": "10.102.6.100",
+        "port": 18963,
+        "user": "MISDEV",
+        "password": "0608H",
+        "database": "DATA_RAW",
+        "options": {
+            "encrypt": false,
+            "trustServerCertificate": true
         }
     }
 }

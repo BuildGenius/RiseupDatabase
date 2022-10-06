@@ -6,6 +6,11 @@ class Apis extends base {
     constructor(params) {
         super(params);
         this.Convertor = new diskspaces();
+        this.authorized();
+    }
+
+    async get_usersApi() {
+
     }
 
     async Store_diskspaces() {

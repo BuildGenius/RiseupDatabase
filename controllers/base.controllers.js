@@ -39,17 +39,17 @@ class base {
         return this;
     }
     authorized(force = true) {
-        let login = true;
+        this.login = true
         if (force) {
             if (this.session('lineID') == undefined) {
-                login = false;
+                this.login = false;
                 this.redirectTo = '/Signin';
             } else {
                 this.redirectTo = '';
             }
         }
 
-        return login ? {status: true}:{status: false, redirectTo: this.redirectTo};
+        return {status: this.login, redirectTo: this.redirectTo};
     }
 }
 

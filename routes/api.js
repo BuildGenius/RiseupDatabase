@@ -8,7 +8,7 @@ var ReceiptDeposit = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/Re
 const USERS = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERS");
 const USERMETA = require("../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA");
 var apis = require("../controllers/apis.controllers");
-// const { Line } = require("messaging-api-line");
+var generateAPIKey = require('generate-api-key').generateApiKey;
 var lineClient = new line({
     "DP": async (messageText) => {
         let message = messageText.toUpperCase().replace(/DP/gm, '');
@@ -44,7 +44,9 @@ var lineClient = new line({
     "ACHIEVEMENT": "GETWEEKLYARCHIVEMENT"
 });
 
-router.use('/auth', authRouter);
+router.use('/auth', async (req, res) => {
+    
+});
 
 router.post('/lineCall', async (req, res) => {
     let data = req.body

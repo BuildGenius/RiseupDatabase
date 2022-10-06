@@ -9,15 +9,15 @@ const InventoryInOut = require('../bin/lib/sqlClass/43.254.133.155-ITECToAX_REP/
 
 router.get('/Buy', async function (req, res) {
     let buy = new Buy(config);
-    let data = await buy.select().desc('TransactionID').get();
-    let defaultCommand = buy.select(buy.column).desc('TransactionID').toString();
+    let data = await buy.select().desc('CrTime').get();
+    let defaultCommand = buy.select(buy.column).desc('CrTime').toString();
 
     res.render('table', {"title": "Buy", column: buy.column, column: Object.keys(data[0]), data: data });
 });
 
 router.get('/Invoice', async function (req, res) {
     let inv = new Invoice(config);
-    let data = await inv.select(inv.column).desc("transactionID").get();
+    let data = await inv.select(inv.column).desc("CrTime").get();
     let defaultCommand = inv.select(inv.column).desc("transactionID").toString();
 
     res.render('table', {"title": "Invoice", column: inv.column, column: Object.keys(data[0]), data: data});
@@ -25,7 +25,7 @@ router.get('/Invoice', async function (req, res) {
 
 router.get('/deposit', async function (req, res) {
     let dept = new Deposit(config);
-    let data = dept.select(dept.column).desc("TransactionID").get();
+    let data = dept.select(dept.column).desc("CrTime").get();
     let defaultCommand = dept.select(dept.column).desc("TransactionID").toString()
     console.log(defaultCommand);
 

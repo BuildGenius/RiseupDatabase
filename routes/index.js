@@ -4,8 +4,8 @@ const User = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERS');
 var sql = require('../bin/lib/sqlClass/sqlSchema');
 var config = require('../configuration.json').ITECToAX_REP;
 var config_min = require('../configuration.json')['min-project'];
-var credentials_line_login = require('../configuration-line.json')['line-login'].development;
-var credentials_line_message = require('../configuration-line.json')['line-message'].development;
+var credentials_line_login = require('../configuration-line.json')['line-login'].production;
+var credentials_line_message = require('../configuration-line.json')['line-message'].production;
 var lineLogin = require('line-login');
 var { LineClient } = require('messaging-api-line');
 const USERMETA = require('../bin/lib/sqlClass/192.168.43.84-min-project/USERMETA');
@@ -18,6 +18,7 @@ const { response } = require('express');
 const client = new LineClient(credentials_line_message);
 const disk = require('../models/diskspace');
 const performance = require('../controllers/performances/diskspaces');
+const api = require('../controllers/apis.controllers');
 
 
 /* GET home page. */
@@ -177,6 +178,12 @@ router.post('/availablediskspcs/:serverName?', async function (req, res) {
     }
 
     res.json({'available': availableGb, 'total': totaldiskGb, 'avgIncrementPerDay': incrementalMb, 'availableDay': availableDay});
-})
+});
+
+router.get('/requestApis', async function (req, res) {
+  let apis = new api(req);
+
+  res.json(apis);
+});
 
 module.exports = router;

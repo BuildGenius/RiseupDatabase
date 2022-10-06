@@ -13,7 +13,7 @@ class message {
         return this;
     }
     async sendText(userID, text) {
-        console.log(this.msg.pushText(userID, text));
+        this.msg.pushText(userID, text);
     }
     createClientMessage() {
         this.msg = new LineClient({
